@@ -110,8 +110,8 @@ survfit.lab.baseline.rm.event0=survfit.lab.baseline.R1.fun(dat.survival, nm.even
 ###########
 cat("binary model \n")
 
-survfit.lab.t=survfit.lab.t.R1.fun(dat.survival, nm.event, dir.output, nm.lab.LabAll,t0.all=c(1:14), rm.event.baseline=F, is.bt=T)
-survfit.lab.t.rm.event0=survfit.lab.t.R1.fun(dat.survival, nm.event, dir.output, nm.lab.LabAll, t0.all=c(1:14), rm.event.baseline=T, is.bt=T)
+survfit.lab.t=survfit.lab.t.R1.fun(dat.survival, LocalPatientObservations, nm.event, dir.output, nm.lab.LabAll,t0.all=c(1:14), rm.event.baseline=F, is.bt=T)
+survfit.lab.t.rm.event0=survfit.lab.t.R1.fun(dat.survival, LocalPatientObservations, nm.event, dir.output, nm.lab.LabAll, t0.all=c(1:14), rm.event.baseline=T, is.bt=T)
 
 
 ########### transportability
