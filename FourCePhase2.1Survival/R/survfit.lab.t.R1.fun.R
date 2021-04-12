@@ -1,5 +1,5 @@
 
-survfit.lab.t.R1.fun=function(dat.survival, nm.event, dir.output, nm.lab.keep, t0.all, rm.event.baseline=F, is.bt=T){
+survfit.lab.t.R1.fun=function(dat.survival, LocalPatientObservations, nm.event, dir.output, nm.lab.keep, t0.all, rm.event.baseline=F, is.bt=T){
   
   dat.calendar=dat.survival$dat.calendar
   dat.x.raw =LocalPatientObservations
