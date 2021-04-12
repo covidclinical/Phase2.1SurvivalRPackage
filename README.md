@@ -1,7 +1,7 @@
 # Phase2.1SurvivalRPackage for Docker user.
 R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend project and additional results for Phase1.1 paper revision. Please note it will take about 30 minutes to finish running the analysis. Thank you for your patience!
 
-To install this package in R:
+Please run the following scripts in R:
 
 ```
 devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPackage", subdir="FourCePhase2.1Survival", upgrade=FALSE)
