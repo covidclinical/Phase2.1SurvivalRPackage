@@ -1,4 +1,4 @@
-# Phase2.1SurvivalRPackage for Docker user.
+# Phase2.1SurvivalRPackage for Docker User.
 R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend project and additional results for Phase1.1 paper revision. Please note it will take about 30 minutes to finish running the analysis. Thank you for your patience!
 
 ## 1. Make sure you are using the latest version of Docker. 
@@ -14,7 +14,6 @@ library(FourCePhase2.1Survival)
 library(icd)
 currSiteId = getSiteId()
 runAnalysis(currSiteId)
-submitAnalysis()
 ```
 
 ## 4. Two ways to submit the results:
@@ -26,4 +25,4 @@ submitAnalysis()
 submitAnalysis()
 ```
 
-2. Alternatively, if somehow submitAnalysis() didn’t allow you to upload the results to Phase2.1SurvivalRSummariesPublic, you can share the results file with @Chuan via the direct message on Slack channel.
+2. Submit via Slack channel. Alternatively, if somehow submitAnalysis() didn’t allow you to upload the results to Phase2.1SurvivalRSummariesPublic, you can share the results file with @Chuan via the direct message on Slack channel.
