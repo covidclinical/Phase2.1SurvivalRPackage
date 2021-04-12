@@ -13,7 +13,7 @@ runAnalysis(currSiteId)
 submitAnalysis()
 ```
 
-Share with @Chuan your GitHub handle via direct message on Slack channel so you can be added as contributor to the repository. Note that you would need to use a token to access private repos, see here. https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
+Share with @Chuan your GitHub account name via direct message on Slack channel so you can be added as contributor to the repository. Note that you would need to use a token to access private repos, see here. https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
 
 Briefly, to generate a new token, go to your GitHub settings -> Developer settings -> Personal access tokens -> Generate.
 
