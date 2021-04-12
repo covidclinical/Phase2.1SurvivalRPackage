@@ -105,10 +105,7 @@ export(SIM.FUN)
 export(ROC.Est.FUN) 
 export(S.FUN) 
 export(Sinv.FUN) 
+export(VTM)
+export(sum.I)
 
-
-
-VTM
-
-sum.I 
 exportPattern("^[^\\.]")
