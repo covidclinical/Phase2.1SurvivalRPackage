@@ -1,5 +1,5 @@
 survfit.coxnet.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, siteid, dir.output, 
-                            period.train, period.valid, calendar.date.cut,  t0.all, yes.cv=T, K=50){
+                            period.train, period.valid, calendar.date.cut,  t0.all, yes.cv=T, K=50, is.bt=T){
   
   cat("data preparing \n")
   nm.dem=c("age_group_new", "sex", "race_new")
@@ -118,6 +118,12 @@ survfit.coxnet.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, siteid,
   score.sep.lab.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.lab.cv, roc.sep.lab.cv, is.combine=F, is.sep=T),error=function(e) NA)
   score.sep.cls.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cls.cv, roc.sep.cls.cv, is.combine=F, is.sep=T),error=function(e) NA)
 
+  auc.cv.cov.se= tryCatch(sd(junk.cv.cov$auc.sep.cov.bt,na.rm=T),error=function(e) NA)
+  auc.cv.dem.se= tryCatch(sd(junk.cv.dem$auc.sep.cov.bt,na.rm=T),error=function(e) NA)
+  auc.cv.lab.se= tryCatch(sd(junk.cv.lab$auc.sep.cov.bt,na.rm=T),error=function(e) NA)
+  auc.cv.cls.se= tryCatch(sd(junk.cv.cls$auc.sep.cov.bt,na.rm=T),error=function(e) NA)
+  
+  
   return(list(betahat.cov=betahat.cov, 
               betahat.dem=betahat.dem, 
               betahat.lab=betahat.lab, 
@@ -138,7 +144,11 @@ survfit.coxnet.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, siteid,
               score.sep.cov.bymonth=score.sep.cov.bymonth,
               score.sep.dem.bymonth=score.sep.dem.bymonth, 
               score.sep.lab.bymonth=score.sep.lab.bymonth, 
-              score.sep.cls.bymonth=score.sep.cls.bymonth
+              score.sep.cls.bymonth=score.sep.cls.bymonth,
+              auc.cv.cov.se=auc.cv.cov.se,
+              auc.cv.dem.se=auc.cv.dem.se,
+              auc.cv.lab.se=auc.cv.lab.se,
+              auc.cv.cls.se=auc.cv.cls.se
   ))
 }
 
