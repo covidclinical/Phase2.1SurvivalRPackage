@@ -101,8 +101,9 @@ survfit.coxnet.Lit3.DemCls.ind=survfit.coxnet.R1.fun(dat.survival, nm.event, nm.
 ### single lab + ind
 cat("single lab \n")
 
-survfit.coxnet.LabSingle.ind=lapply(nm.lab.LabAll, function(ll) survfit.coxnet.R1.fun(dat.survival, nm.event, nm.dem, nm.lab.keep=ll, nm.cls, siteid, dir.output, 
-                                                                                      period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T, include.cls=F, include.dem=F))
+survfit.coxnet.LabSingle.ind=lapply(nm.lab.LabAll, function(ll) tryCatch(survfit.coxnet.R1.fun(dat.survival, nm.event, nm.dem, nm.lab.keep=ll, nm.cls, siteid, dir.output, 
+                                                                                      period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T, include.cls=F, include.dem=F), error=function(e) NA))
+
 names(survfit.coxnet.LabSingle.ind)=nm.lab.LabAll
 
 survfit.lab.baseline.rm.event0=survfit.lab.baseline.R1.fun(dat.survival, nm.event, t0.all=c(1:14), rm.event.baseline=T, is.bt=T)
