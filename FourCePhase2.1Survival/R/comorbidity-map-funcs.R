@@ -26,6 +26,7 @@ map_charlson_codes <- function(data) {
   ## Because the 4CE has truncated ICD codes, we will also truncate the icd package index maps
   # Function to select first 3 characters of the ICD Code in all lists of the index map
   data(icd10_map_charlson, package="icd")
+  data(icd9_map_charlson, package="icd")
 
   icd10_map_charlson3 <- lapply(icd10_map_charlson, first_3)
   icd9_map_charlson3 <- lapply(icd9_map_charlson, first_3)
