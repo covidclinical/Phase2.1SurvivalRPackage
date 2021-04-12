@@ -117,6 +117,7 @@ survfit.lab.t.rm.event0=survfit.lab.t.R1.fun(dat.survival, nm.event, dir.output,
 ########### transportability
 ## coefficient from literature
 cat("transportability \n")
+data(betahat.us, package="FourCePhase2.1Survival")
 
 betahat.Lit3=c(0.013,-1.984, 0.112/1000)
 names(betahat.Lit3)=nm.lab.Lit3
