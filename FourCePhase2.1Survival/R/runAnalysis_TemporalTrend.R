@@ -1,8 +1,10 @@
 
 runAnalysis_TemporalTrend=function(currSiteId){
 dir.input=getInputDataDirectoryName()
-obfuscation.level=getObfuscation(currSiteId)
-if(obfuscation.level!=0){obfuscation=T}
+obfuscation.level=getObfuscation(toupper(currSiteId))
+obfuscation=F
+if(length(obfuscation.level)!=0){
+if(obfuscation.level!=0){obfuscation=T}}
 #### 1. read data
 cat("1. read data\n")
 LocalPatientObservations=FourCePhase2.1Data::getLocalPatientObservations(currSiteId)
@@ -85,8 +87,8 @@ lab.dist.log=lab_dist_fun(dir.input,code.dict,LocalPatientObservations, dat.surv
 cat("7. lab observation rate \n")
 lab.summary=lab_summary_va_fun(dir.input, code.dict, LocalPatientObservations, dat.survival)
 
-#### 9. lab recover rate
-cat("9. lab recovery rate \n")
+#### 8. lab recover rate
+cat("8. lab recovery rate \n")
 
 myscale="log"
 lab.recover=NULL
@@ -100,11 +102,9 @@ days.range.list=list(c(1:14))
      lab.recover[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp
     }
 
-
-
   
-#### 8. charlson score
-cat("8. charlson score \n")
+#### 9. charlson score
+cat("9. charlson score \n")
 
 cls=data.frame(dat.cls)
 cls$patient_num=as.numeric(cls$patient_num)
@@ -133,6 +133,8 @@ colnames(cls.obs.summary)[3]="obs_sum"
 cls.early=hist(junk2$charlson_score[junk2$calendar_date<"2020-07"],plot=F)
 cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 
+#### 10. obfuscation
+cat("10. obfuscation\n")
 if(obfuscation==T){
 junk=obfuscation.fun(summary.report, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
 summary.report=junk$summary.report

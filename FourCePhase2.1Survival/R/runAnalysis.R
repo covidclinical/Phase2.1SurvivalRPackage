@@ -1,9 +1,12 @@
 
 runAnalysis=function(currSiteId){
+file.log=file(file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt")),open = "wt")
+sink(file.log, type="message")
 cat("TEMPORAL TREND ANALYSIS\n")
-runAnalysis_TemporalTrend(currSiteId)
-cat("Phase1.1 Paper Revision\n")
-runAnalysis_R1(currSiteId)
+tryCatch(runAnalysis_TemporalTrend(currSiteId),error=function(e) print(e))
+cat("Phase1.1 PAPER REVISION\n")
+tryCatch(runAnalysis_R1(currSiteId),error=function(e) print(e))
+sink()
 }
 
 
