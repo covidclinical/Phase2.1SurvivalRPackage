@@ -3,7 +3,7 @@ R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend
 
 ## 1. Make sure you are using the latest version of Docker. 
 
-## 2. ALWAYS RESTART your R session before installing or re-installing the package!
+## 2. Always RESTART your R session before installing or re-installing the package!
 
 ## 3. Run the following scripts in R:
 
