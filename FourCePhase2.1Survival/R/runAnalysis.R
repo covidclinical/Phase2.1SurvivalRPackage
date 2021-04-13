@@ -1,6 +1,6 @@
 
 runAnalysis=function(currSiteId){
-file.log=file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt"))
+file.log=file(file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt")),open = "wt")
 sink(file.log, type="message")
 cat("TEMPORAL TREND ANALYSIS\n")
 tryCatch(runAnalysis_TemporalTrend(currSiteId),error=function(e) print(e))
