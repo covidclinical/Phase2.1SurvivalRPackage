@@ -37,8 +37,8 @@ submitAnalysis()
 ```
 devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPackage", subdir="FourCePhase2.1Survival", upgrade=FALSE, force=T)
 currSiteId = "MGB" ## change to your siteid
-dir.input="/Users/chuanhong/Documents/Input"
-dir.output="/Users/chuanhong/Documents/Output"
+dir.input="/Users/chuanhong/Documents/Input" ## change to your input directory
+dir.output="/Users/chuanhong/Documents/Output" ## change to your output directory
 FourCePhase2.1Survival::runAnalysis_nodocker(currSiteId, dir.input, dir.output)
 ```
 
