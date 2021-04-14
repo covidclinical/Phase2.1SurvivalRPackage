@@ -1,5 +1,5 @@
 
-runAnalysis=function(currSiteId){
+runAnalysis=function(){
 file.log=file(file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt")),open = "wt")
 sink(file.log)
 sink(file.log, type="message")
