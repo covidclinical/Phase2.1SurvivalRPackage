@@ -1,4 +1,3 @@
-<img width="406" alt="Screen Shot 2021-04-14 at 2 11 07 AM" src="https://user-images.githubusercontent.com/9748986/114662442-ae7fc980-9cc6-11eb-8b35-d8c38bbebb06.png">
 # Phase2.1SurvivalRPackage 
 
 R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend project and additional results for Phase1.1 paper revision. Please note it will take about 30 minutes to finish running the analysis. Thank you for your patience!
