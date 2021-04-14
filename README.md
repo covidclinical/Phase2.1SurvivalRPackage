@@ -62,7 +62,7 @@ sapply(paste0("R\\",files.sources), function(x) source(x))
 currSiteId = "VA1" ### you may change to "VA2", ..., "VA5" as needed
 runAnalysis_VA(currSiteId, dir.output)
 ```
-## 6 Two ways to submit the results
+## 6. Two ways to submit the results
 There should be three files in the output folder: VA_Result.Rdata, VA_Result_R1.Rdata, and VA_log.txt. You can choose either of the following way to submit the results.
 
 1. Submit via GitHub. 
