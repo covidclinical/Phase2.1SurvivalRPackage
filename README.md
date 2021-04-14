@@ -1,3 +1,4 @@
+<img width="406" alt="Screen Shot 2021-04-14 at 2 11 07 AM" src="https://user-images.githubusercontent.com/9748986/114662442-ae7fc980-9cc6-11eb-8b35-d8c38bbebb06.png">
 # Phase2.1SurvivalRPackage 
 
 R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend project and additional results for Phase1.1 paper revision. Please note it will take about 30 minutes to finish running the analysis. Thank you for your patience!
@@ -35,8 +36,7 @@ submitAnalysis()
 # VA Users
 
 ## 1. Download the zip of the github repo
-<img width="483" alt="Screen Shot 2021-04-14 at 12 45 19 AM" src="https://user-images.githubusercontent.com/9748986/114655686-b33e8080-9cba-11eb-93f7-2756436a2605.png">
-. 
+<img width="401" alt="Screen Shot 2021-04-14 at 2 11 26 AM" src="https://user-images.githubusercontent.com/9748986/114662470-b9d2f500-9cc6-11eb-910c-aef774780b25.png">
 
 ## 2. Upload files to VINCI
 Unzip the file downloaded from the github repo, upload the files under "FourCePhase2.1Survival/R" and "FourCePhase2.1Survival/data" to VINCI.
