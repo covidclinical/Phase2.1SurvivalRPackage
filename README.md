@@ -19,7 +19,7 @@ currSiteId = getSiteId()
 runAnalysis(currSiteId)
 ```
 
-## 4 Two ways to submit the results:
+## 4. Two ways to submit the results:
 1. Submit via GitHub. 
 + (1) Share with @Chuan your GitHub accountname via direct message on Slack channel so you can be added as contributor to the repository. 
 + (2) Note that you would need to use a token to access private repos, see here (https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Briefly, to generate a new token, go to your GitHub settings -> Developer settings -> Personal access tokens -> Generate.
