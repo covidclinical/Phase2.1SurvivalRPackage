@@ -105,5 +105,8 @@ export(S.FUN)
 export(Sinv.FUN) 
 export(VTM)
 export(sum.I)
+export(runAnalysis_nodocker)
+export(runAnalysis_TemporalTrend_nodocker)
+export(runAnalysis_R1_nodocker)
 
 exportPattern("^[^\\.]")
