@@ -39,11 +39,14 @@ submitAnalysis()
 <img width="483" alt="Screen Shot 2021-04-14 at 12 45 19 AM" src="https://user-images.githubusercontent.com/9748986/114655686-b33e8080-9cba-11eb-93f7-2756436a2605.png">
 . 
 
-## 2. Upload files under "FourCePhase2.1Survival/R" and "FourCePhase2.1Survival/data" to VINCI
+## 2. Upload files to VINCE
+Unzip the file downloaded from the github repo, upload the files under "FourCePhase2.1Survival/R" and "FourCePhase2.1Survival/data" to VINCI.
 
-## 3. Create a folder named "[YourPath]/FourCePhase2.1Survival" in your own folder at VINCI, and move the files from UPLOAD to this folder. You should have subfolders R, data, and Output. 
+## 3. Set up directory at VINCI
+Create a folder named "[YourPath]/FourCePhase2.1Survival" in your own folder at VINCI, and move the files from UPLOAD to this folder. You should have subfolders R, data, and Output. 
 
-## 4. Set the working directory to "[YourPath]/FourCePhase2.1Survival", and set the output directory. Please note fail to set the right working and output directories will lead to error when running the code.
+## 4. Set up directory in R
+Set the working directory to "[YourPath]/FourCePhase2.1Survival", and set the output directory. Please note fail to set the right working and output directories will lead to error when running the code.
 
 ```
 setwd("[YourPath]/FourCePhase2.1Survival")
