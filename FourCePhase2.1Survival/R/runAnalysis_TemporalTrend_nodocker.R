@@ -1,6 +1,6 @@
 
 runAnalysis_TemporalTrend_nodocker=function(currSiteId, dir.input, dir.output){
-obfuscation.level=getObfuscation(toupper(currSiteId))
+obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))
 obfuscation=F
 if(length(obfuscation.level)!=0){
 if(obfuscation.level!=0){obfuscation=T}}
