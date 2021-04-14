@@ -35,8 +35,7 @@ submitAnalysis()
 # VA Users
 
 ## 1. Download the zip of the github repo
-<img width="483" alt="Screen Shot 2021-04-14 at 12 45 19 AM" src="https://user-images.githubusercontent.com/9748986/114655686-b33e8080-9cba-11eb-93f7-2756436a2605.png">
-. 
+<img width="401" alt="Screen Shot 2021-04-14 at 2 11 26 AM" src="https://user-images.githubusercontent.com/9748986/114662470-b9d2f500-9cc6-11eb-910c-aef774780b25.png">
 
 ## 2. Upload files to VINCI
 Unzip the file downloaded from the github repo, upload the files under "FourCePhase2.1Survival/R" and "FourCePhase2.1Survival/data" to VINCI.
