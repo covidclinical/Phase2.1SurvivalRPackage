@@ -119,7 +119,7 @@ survfit.lab.t.rm.event0=survfit.lab.t.R1.fun(dat.survival, LocalPatientObservati
 ########### transportability
 ## coefficient from literature
 cat("7. transportability \n")
-data(betahat.us, package="FourCePhase2.1Survival")
+data(betahat.port, package="FourCePhase2.1Survival")
 
 betahat.Lit3=c(0.013,-1.984, 0.112/1000)
 names(betahat.Lit3)=nm.lab.Lit3
@@ -128,9 +128,9 @@ survfit.coxnet.port.Lit3=survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, 
                                                                     period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T)
 
 survfit.coxnet.port.betahat=NULL
-for(mymodel in ls(betahat.us)[1]){
+for(mymodel in ls(betahat.port)[1]){
 print(mymodel)
-tmp1=betahat.us[[mymodel]]
+tmp1=betahat.port[[mymodel]]
 for(submodel in ls(tmp1)){
 tmp2=tmp1[[submodel]]
 for(mysite in c("BIDMC", "NWU", "upenn", "VA1")){
