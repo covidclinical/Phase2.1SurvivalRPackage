@@ -2,7 +2,7 @@
 runAnalysis=function(){
 devtools::install_github("https://github.com/covidclinical/Phase2.1DataRPackage", subdir="FourCePhase2.1Data", upgrade=FALSE)
 currSiteId = getSiteId()
-FourCePhase2.1Data::runQC(currSiteId)
+tryCatch(FourCePhase2.1Data::runQC(currSiteId),error=function(e) print(e))
 file.log=file(file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt")),open = "wt")
 sink(file.log, type="message")
 cat("TEMPORAL TREND ANALYSIS\n")
