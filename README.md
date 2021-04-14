@@ -12,10 +12,8 @@ R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend
 
 ```
 devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPackage", subdir="FourCePhase2.1Survival", upgrade=FALSE)
-library(FourCePhase2.1Data)
-library(FourCePhase2.1Survival)
-library(icd)
-runAnalysis()
+FourCePhase2.1Survival::runAnalysis()
+FourCePhase2.1Survival::submitAnalysis()
 ```
 
 ## 4. Two ways to submit the results:
@@ -38,16 +36,10 @@ submitAnalysis()
 
 ```
 devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPackage", subdir="FourCePhase2.1Survival", upgrade=FALSE, force=T)
-library(FourCePhase2.1Data)
-library(FourCePhase2.1Survival)
-library(icd)
-
 currSiteId = "MGB" ## change to your siteid
-dir.input="/Users/chuanhong/Documents/Input" ## change to your Input path
-dir.output="/Users/chuanhong/Documents/Output" ## change to your Output path
-
-runAnalysis_nodocker(currSiteId, dir.input, dir.output)
-
+dir.input="/Users/chuanhong/Documents/Input"
+dir.output="/Users/chuanhong/Documents/Output"
+FourCePhase2.1Survival::runAnalysis_nodocker(currSiteId, dir.input, dir.output)
 ```
 
 ## 4. Two ways to submit the results:
