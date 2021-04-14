@@ -1,8 +1,8 @@
 
 runAnalysis_TemporalTrend=function(currSiteId){
-dir.input=getInputDataDirectoryName()
+dir.input=FourCePhase2.1Data::getInputDataDirectoryName()
 dir.output=getProjectOutputDirectory()
-obfuscation.level=getObfuscation(toupper(currSiteId))
+obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))
 obfuscation=F
 if(length(obfuscation.level)!=0){
 if(obfuscation.level!=0){obfuscation=T}}
