@@ -1,16 +1,14 @@
 
-runAnalysis_TemporalTrend=function(currSiteId){
-dir.input=getInputDataDirectoryName()
-dir.output=getProjectOutputDirectory()
+runAnalysis_TemporalTrend=function(currSiteId, dir.input, dir.output){
 obfuscation.level=getObfuscation(toupper(currSiteId))
 obfuscation=F
 if(length(obfuscation.level)!=0){
 if(obfuscation.level!=0){obfuscation=T}}
 #### 1. read data
 cat("1. read data\n")
-LocalPatientObservations=FourCePhase2.1Data::getLocalPatientObservations(currSiteId)
-LocalPatientClinicalCourse=FourCePhase2.1Data::getLocalPatientClinicalCourse(currSiteId)
-LocalPatientSummary=FourCePhase2.1Data::getLocalPatientSummary(currSiteId)
+LocalPatientObservations=FourCePhase2.1Data::getLocalPatientObservations_nodocker(currSiteId, dir.input)
+LocalPatientClinicalCourse=FourCePhase2.1Data::getLocalPatientClinicalCourse_nodocker(currSiteId, dir.input)
+LocalPatientSummary=FourCePhase2.1Data::getLocalPatientSummary_nodocker(currSiteId, dir.input)
 data(code.dict, package="FourCePhase2.1Data")
 
 #### 2. set up parameters
