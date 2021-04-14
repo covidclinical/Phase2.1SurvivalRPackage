@@ -165,8 +165,16 @@ map_charlson_codes <- function(data) {
   }
 
   # Bind both ICD 9 and 10 code tables together
-  mapped_codes_table <-
-    rbind(try(icd10_mapped_table, icd9_mapped_table), silent = TRUE)
+  
+  if (exists("icd10_mapped_table") == T & exists("icd9_mapped_table") == T) {
+    mapped_codes_table <- rbind(try(icd10_mapped_table, icd9_mapped_table), silent = TRUE)
+  } else if (exists("icd10_mapped_table") == F & exists("icd9_mapped_table") == T) {
+    mapped_codes_table <- icd9_mapped_table
+  } else if (exists("icd10_mapped_table") == T & exists("icd9_mapped_table") == F) {
+    mapped_codes_table <- icd10_mapped_table
+  }
+  
+  
 
   # calculate how many patients had each unique Comorbidity/concept_code
   mapped_codes_table <- mapped_codes_table %>%
