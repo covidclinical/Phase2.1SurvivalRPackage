@@ -1,4 +1,4 @@
-runAnalysis_VA=function(currSiteId, dir.package, dir.output){
+runAnalysis_VA=function(currSiteId, dir.output){
   file.log=file(file.path(dir.output, paste0(currSiteId, "_log.txt")),open = "wt")
   sink(file.log)
   sink(file.log, type="message")

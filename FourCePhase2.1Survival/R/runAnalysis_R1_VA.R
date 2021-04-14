@@ -1,6 +1,6 @@
 
-runAnalysis_R1_VA=function(currSiteId, dir.package, dir.output){
-load(file.path(dir.package, paste0("FourCePhase2.1Survival/data/code.dict.rda"))
+runAnalysis_R1_VA=function(currSiteId,dir.output){
+load("data/code.dict.rda")
 siteid=currSiteId
 obfuscation.level=10
 obfuscation=F
@@ -80,7 +80,7 @@ is.rmout=F
 is.onlyCLS=F
 
 if(is.rmout==T){
-  patient_num.out=lab_outlier_fun(dir.package)
+  patient_num.out=lab_outlier_fun()
   dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)}
 
 if(is.onlyCLS==T){

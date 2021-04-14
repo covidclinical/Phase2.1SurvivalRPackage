@@ -1,7 +1,7 @@
 
-runAnalysis_TemporalTrend_VA=function(currSiteId,dir.package, dir.output){
-load(file.path(dir.package, paste0("FourCePhase2.1Survival/data/code.dict.rda"))
-load(file.path(dir.package, paste0("FourCePhase2.1Survival/data/betahat.port.rda"))
+runAnalysis_TemporalTrend_VA=function(currSiteId,dir.output){
+load("data/code.dict.rda")
+load("data/betahat.port.rda")
           
 siteid=currSiteId
 obfuscation.level=10
