@@ -4,11 +4,11 @@ R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend
 
 # 1. Docker User
 
-## 1 Make sure you are using the latest version of Docker. 
+## 1. Make sure you are using the latest version of Docker. 
 
-## 2 Always RESTART your R session before installing or re-installing the package!
+## 2. Always RESTART your R session before installing or re-installing the package!
 
-## 3 Run the following scripts in R:
+## 3. Run the following scripts in R:
 
 ```
 devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPackage", subdir="FourCePhase2.1Survival", upgrade=FALSE)
