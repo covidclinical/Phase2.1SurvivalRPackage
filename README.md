@@ -1,4 +1,6 @@
-# Phase2.1SurvivalRPackage for Docker User.
+# Phase2.1SurvivalRPackage for Docker User, Non-Docker User, and VA User. 
+
+# 1. Docker User
 R code to run, validate, and submit the analysis for the Phase2.1 Temporal Trend project and additional results for Phase1.1 paper revision. Please note it will take about 30 minutes to finish running the analysis. Thank you for your patience!
 
 ## 1. Make sure you are using the latest version of Docker. 
