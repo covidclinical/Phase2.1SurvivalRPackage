@@ -1,5 +1,5 @@
 
-runAnalysis_TemporalTrend=function(currSiteId, dir.input, dir.output){
+runAnalysis_TemporalTrend_nodocker=function(currSiteId, dir.input, dir.output){
 obfuscation.level=getObfuscation(toupper(currSiteId))
 obfuscation=F
 if(length(obfuscation.level)!=0){
