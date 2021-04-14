@@ -30,7 +30,34 @@ submitAnalysis()
 2. Submit via Slack channel. Alternatively, if somehow submitAnalysis() didn’t allow you to upload the results to Phase2.1SurvivalRSummariesPublic, you can share the results file with @Chuan via the direct message on Slack channel.
 
 # Non-Docker Users
-## Please refer to branch no-docker: https://github.com/covidclinical/Phase2.1SurvivalRPackage/tree/no-docker
+## 1. Make sure your R is upgraded to 4.0.2
+
+## 2. Always RESTART your R session before installing or re-installing the package!
+
+## 3. Run the following scripts in R:
+
+```
+devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPackage", subdir="FourCePhase2.1Survival", upgrade=FALSE, force=T)
+library(FourCePhase2.1Data)
+library(FourCePhase2.1Survival)
+library(icd)
+
+currSiteId = "MGB" ## change to your siteid
+dir.input="/Users/chuanhong/Documents/Input" ## change to your Input path
+dir.output="/Users/chuanhong/Documents/Output" ## change to your Output path
+
+runAnalysis_nodocker(currSiteId, dir.input, dir.output)
+
+```
+
+## 4. Two ways to submit the results:
+1. Submit via GitHub. 
++ (1) Share with @Chuan your GitHub accountname via direct message on Slack channel so you can be added as contributor to the repository. 
++ (2) Note that you would need to use a token to access private repos, see here (https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Briefly, to generate a new token, go to your GitHub settings -> Developer settings -> Personal access tokens -> Generate.
++ (3) Submit the result files in your output directory to the branch named topic-[YourSiteId] in GitHub repo Phase2.1SurvivalRSummariesPublic 
+
+2. Submit via Slack channel. Alternatively, if somehow submitAnalysis() didn’t allow you to upload the results to Phase2.1SurvivalRSummariesPublic, you can share the results file with @Chuan via the direct message on Slack channel.
+
 
 # VA Users
 
