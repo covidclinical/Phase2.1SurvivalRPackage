@@ -39,7 +39,7 @@ submitAnalysis()
 <img width="483" alt="Screen Shot 2021-04-14 at 12 45 19 AM" src="https://user-images.githubusercontent.com/9748986/114655686-b33e8080-9cba-11eb-93f7-2756436a2605.png">
 . 
 
-## 2. Upload files to VINCE
+## 2. Upload files to VINCI
 Unzip the file downloaded from the github repo, upload the files under "FourCePhase2.1Survival/R" and "FourCePhase2.1Survival/data" to VINCI.
 
 ## 3. Set up directory at VINCI
