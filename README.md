@@ -15,8 +15,7 @@ devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPack
 library(FourCePhase2.1Data)
 library(FourCePhase2.1Survival)
 library(icd)
-currSiteId = getSiteId()
-runAnalysis(currSiteId)
+runAnalysis()
 ```
 
 ## 4. Two ways to submit the results:
