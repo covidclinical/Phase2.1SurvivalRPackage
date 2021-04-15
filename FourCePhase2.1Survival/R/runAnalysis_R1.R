@@ -108,7 +108,7 @@ survfit.coxnet.LabSingle.ind=lapply(nm.lab.LabAll, function(ll) tryCatch(survfit
 
 names(survfit.coxnet.LabSingle.ind)=nm.lab.LabAll
 
-survfit.lab.baseline.rm.event0=survfit.lab.baseline.R1.fun(dat.survival, nm.event, t0.all=c(1:14), rm.event.baseline=T, is.bt=T)
+survfit.lab.baseline.rm.event0=tryCatch(survfit.lab.baseline.R1.fun(dat.survival, nm.event, t0.all=c(1:14), rm.event.baseline=T, is.bt=T),error=function(e){print(e); NA})
 
 ###########
 cat("6. binary model \n")
@@ -125,8 +125,8 @@ data(betahat.port, package="FourCePhase2.1Survival")
 betahat.Lit3=c(0.013,-1.984, 0.112/1000)
 names(betahat.Lit3)=nm.lab.Lit3
 
-survfit.coxnet.port.Lit3=survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat=betahat.Lit3, nm.cls, siteid, dir.output, 
-                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T)
+survfit.coxnet.port.Lit3=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat=betahat.Lit3, nm.cls, siteid, dir.output, 
+                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
 
 survfit.coxnet.port.betahat=NULL
 for(mymodel in ls(betahat.port)[1]){
