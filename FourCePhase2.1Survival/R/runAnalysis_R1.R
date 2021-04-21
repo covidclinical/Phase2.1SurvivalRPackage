@@ -153,8 +153,7 @@ betahat=betahat.port[[mymodel]][[submodel]][[mysite]]
 survfit.coxnet.port.betahat[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
                                                                                     period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
 }
-}
-}
+
 
 ####### C statistics
 cat("C statistics \n")
