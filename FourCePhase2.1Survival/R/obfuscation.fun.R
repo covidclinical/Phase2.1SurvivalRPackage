@@ -107,6 +107,8 @@ obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.d
     }
   }
   
+  lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
+  
   return(list(summary.report=summary.report, 
               survfit.coxnet=survfit.coxnet,
               lab.dist.original=lab.dist.original, 

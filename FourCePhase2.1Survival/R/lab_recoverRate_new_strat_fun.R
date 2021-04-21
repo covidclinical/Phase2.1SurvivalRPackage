@@ -19,6 +19,28 @@ patient_num.keep=unique(setdiff(dat.survival$dat.analysis.deceased$patient_num, 
   
 }
 
+#### patient_num summary
+dat.calendar.keep=dat.calendar[dat.calendar$patient_num%in%patient_num.keep,]
+day.range.list=list()
+day.range.list[["week1"]]=c(0:7)
+day.range.list[["week2"]]=c(8:14)
+day.range.list[["week3"]]=c(15:60)
+day.range.list[["all"]]=c(0:60)
+
+dat.calendar.early=dat.calendar[dat.calendar$calendar_date<calendar.date.cut,]
+dat.calendar.late=dat.calendar[dat.calendar$calendar_date>=calendar.date.cut,]
+dat.calendar.early=left_join(dat.calendar.early,dat.cc.stay, by="patient_num")
+dat.calendar.late=left_join(dat.calendar.late,dat.cc.stay, by="patient_num")
+
+resN=NULL
+for(ii in names(day.range.list)){
+  myrange=day.range.list[[ii]]
+  n.early=dim(dat.calendar.early[dat.calendar.early$max_day%in%myrange,])[1]
+  n.late=dim(dat.calendar.late[dat.calendar.late$max_day%in%myrange,])[1]
+  resN=rbind(resN, data.frame(week.setting=ii,n.early=n.early, n.late=n.late))
+}
+
+####
 junk=NULL
 for(myday in days.range){
 dat.lab.tmp=data_lab_clean2(code.dict, dat.x.raw, nm.value="value", day=myday)
@@ -135,5 +157,6 @@ for(nm.lab in nm.lab.all){
  }
   }
 }
+res$resN=resN
 res
 }
