@@ -2,7 +2,9 @@
 runAnalysis_TemporalTrend_VA=function(currSiteId,dir.output){
 load("data/code.dict.rda")
 load("data/betahat.port.rda")
-          
+load("data/lab.breaks.log.rda")
+load("data/lab.breaks.original.rda")
+
 siteid=currSiteId
 obfuscation.level=10
 obfuscation=F

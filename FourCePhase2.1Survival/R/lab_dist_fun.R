@@ -1,4 +1,4 @@
-lab_dist_fun=function(dir.input, code.dict, LocalPatientObservations, dat.survival,calendar.date.cut="2020-07", myscale){
+lab_dist_fun=function(dir.input, code.dict, LocalPatientObservations, dat.survival,calendar.date.cut="2020-07", myscale, lab.breaks.original=lab.breaks.original,lab.breaks.log=lab.breaks.log){
 dat.calendar=dat.survival$dat.calendar
 dat.x.raw =LocalPatientObservations
 patient_num.severe=dat.survival$dat.analysis.severe$patient_num[which(dat.survival$dat.analysis.severe$severe==1)]
