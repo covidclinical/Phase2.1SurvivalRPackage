@@ -65,7 +65,7 @@ map_charlson_codes <- function(data) {
     arrange(as.numeric(patient_num))
 
     # replace abbreviations with full comorbidity name
-  data(names_charlson, package="icd")
+  #data(names_charlson, package="icd")
   comorb_list_names <-
     map_df(
       names_charlson, ~ as.data.frame(.x),
