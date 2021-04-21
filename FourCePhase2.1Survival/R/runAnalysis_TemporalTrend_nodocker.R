@@ -10,6 +10,9 @@ LocalPatientObservations=FourCePhase2.1Data::getLocalPatientObservations_nodocke
 LocalPatientClinicalCourse=FourCePhase2.1Data::getLocalPatientClinicalCourse_nodocker(currSiteId, dir.input)
 LocalPatientSummary=FourCePhase2.1Data::getLocalPatientSummary_nodocker(currSiteId, dir.input)
 data(code.dict, package="FourCePhase2.1Data")
+data(betahat.port, package="FourCePhase2.1Survival")
+data(lab.breaks.log, package="FourCePhase2.1Survival")
+data(lab.breaks.original, package="FourCePhase2.1Survival")
 
 #### 2. set up parameters
 cat("2. set up parameters\n")
@@ -81,8 +84,8 @@ survfit.coxridge[[nm.event]][[period.train]][[period.valid]]=survfit.coxridge.fu
 #### 6. lab distribution
 cat("6. lab distribution\n")
 
-lab.dist.original=lab_dist_fun(dir.input, code.dict,LocalPatientObservations,dat.survival,calendar.date.cut="2020-07", myscale="original")
-lab.dist.log=lab_dist_fun(dir.input,code.dict,LocalPatientObservations, dat.survival,calendar.date.cut="2020-07", myscale="log")
+lab.dist.original=lab_dist_fun(dir.input, code.dict,LocalPatientObservations,dat.survival,calendar.date.cut="2020-07", myscale="original", lab.breaks.original=lab.breaks.original,lab.breaks.log=lab.breaks.log)
+lab.dist.log=lab_dist_fun(dir.input,code.dict,LocalPatientObservations, dat.survival,calendar.date.cut="2020-07", myscale="log", lab.breaks.original=lab.breaks.original,lab.breaks.log=lab.breaks.log)
 
 #### 7. lab observation rate
 cat("7. lab observation rate \n")

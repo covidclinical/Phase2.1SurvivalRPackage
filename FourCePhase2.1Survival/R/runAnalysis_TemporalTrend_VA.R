@@ -2,7 +2,9 @@
 runAnalysis_TemporalTrend_VA=function(currSiteId,dir.output){
 load("data/code.dict.rda")
 load("data/betahat.port.rda")
-          
+load("data/lab.breaks.log.rda")
+load("data/lab.breaks.original.rda")
+
 siteid=currSiteId
 obfuscation.level=10
 obfuscation=F
@@ -93,8 +95,8 @@ survfit.coxridge[[nm.event]][[period.train]][[period.valid]]=survfit.coxridge.fu
 #### 6. lab distribution
 cat("6. lab distribution\n")
 
-lab.dist.original=lab_dist_fun(dir.input, code.dict,LocalPatientObservations,dat.survival,calendar.date.cut="2020-07", myscale="original")
-lab.dist.log=lab_dist_fun(dir.input,code.dict,LocalPatientObservations, dat.survival,calendar.date.cut="2020-07", myscale="log")
+lab.dist.original=lab_dist_fun(dir.input, code.dict,LocalPatientObservations,dat.survival,calendar.date.cut="2020-07", myscale="original", lab.breaks.original=lab.breaks.original,lab.breaks.log=lab.breaks.log)
+lab.dist.log=lab_dist_fun(dir.input,code.dict,LocalPatientObservations, dat.survival,calendar.date.cut="2020-07", myscale="log", lab.breaks.original=lab.breaks.original,lab.breaks.log=lab.breaks.log)
 
 #### 7. lab observation rate
 cat("7. lab observation rate \n")

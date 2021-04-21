@@ -132,7 +132,7 @@ survfit.lab.t.rm.event0=survfit.lab.t.R1.fun(dat.survival, LocalPatientObservati
 ########### transportability
 ## coefficient from literature
 cat("7. transportability \n")
-data(betahat.port, package="FourCePhase2.1Survival")
+load("data/betahat.port.rda")
 
 betahat.Lit3=c(0.013,-1.984, 0.112/1000)
 names(betahat.Lit3)=nm.lab.Lit3
