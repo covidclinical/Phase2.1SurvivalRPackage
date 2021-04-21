@@ -112,6 +112,10 @@ obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.d
               lab.dist.original=lab.dist.original, 
               lab.dist.log=lab.dist.log, 
               lab.summary=lab.summary, 
-              lab.recover=lab.recover))
+              lab.recover=lab.recover,
+              cls.obs.summary=cls.obs.summary,
+              cls.early=cls.early,
+              cls.late=cls.late
+              ))
   
 }
