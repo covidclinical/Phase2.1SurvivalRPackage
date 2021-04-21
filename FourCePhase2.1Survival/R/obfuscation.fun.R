@@ -93,6 +93,7 @@ obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.d
         for(dd in ls(tmp.cc)){
           tmp.dd=tmp.cc[[dd]]
           for(ee in ls(tmp.dd)){
+            if(ee!="resN"){
             tmp.ee=tmp.dd[[ee]]
             for(ff in ls(tmp.ee))
               tmp.ff=tmp.ee[[ff]]
@@ -100,6 +101,7 @@ obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.d
             if(tmp.ff$n.late<=obfuscation.level){tmp.ff$n.late=-99}
             if(tmp.ff$n.lab.early<=obfuscation.level){tmp.ff$n.lab.early=-99}
             if(tmp.ff$n.lab.late<=obfuscation.level){tmp.ff$n.lab.late=-99}
+            }
           }
           
         }
@@ -107,7 +109,7 @@ obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.d
     }
   }
   
-  #lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
+  lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
   
   return(list(summary.report=summary.report, 
               survfit.coxnet=survfit.coxnet,
