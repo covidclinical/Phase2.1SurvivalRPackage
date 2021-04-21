@@ -50,9 +50,15 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     auc.sep.cov.bt=do.call(rbind,lapply(1:100, function(myseed){
     set.seed(myseed)
     dat.sample=dat.train[sample(1:dim(dat.train)[1], replace=T),]
-    yyi.sep.cov=data.matrix(dat.sample[,nm.cov])%*%betahat[nm.cov]
+    betahat.bt=tryCatch(Est.ALASSO.GLMNET(dat.sample[,-1], fam0="Cox", Wi=NULL, lambda.grid=lamhat)$bhat.modBIC,error=function (e) NA)
+    if(length(betahat.bt)!=1){
+    yyi.sep.cov=data.matrix(dat.sample[,nm.cov])%*%betahat.bt[nm.cov]
     roc.sep.cov.bt=ROC.Survfit.FUN(dat.label=dat.sample, score=data.frame(patient_num=dat.sample[,"patient_num"],score=yyi.sep.cov), t0.all, nm.event, ipw=F, is.sep=T)
     auc.sep.cov.bt=unlist(lapply(ls(roc.sep.cov.bt), function(ll) roc.sep.cov.bt[[ll]]$auc))
+    }else{
+    auc.sep.cov.bt=NA
+    }
+    auc.sep.cov.bt
     }
     ))}else{
     auc.sep.cov.bt=NA

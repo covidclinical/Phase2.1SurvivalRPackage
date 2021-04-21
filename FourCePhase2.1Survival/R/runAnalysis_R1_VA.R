@@ -128,6 +128,7 @@ survfit.lab.t=survfit.lab.t.R1.fun(dat.survival, LocalPatientObservations, nm.ev
 survfit.lab.t.rm.event0=survfit.lab.t.R1.fun(dat.survival, LocalPatientObservations, nm.event, dir.output, nm.lab.LabAll, t0.all=c(1:14), rm.event.baseline=T, is.bt=T)
 
 
+
 ########### transportability
 ## coefficient from literature
 cat("7. transportability \n")
@@ -136,39 +137,50 @@ data(betahat.port, package="FourCePhase2.1Survival")
 betahat.Lit3=c(0.013,-1.984, 0.112/1000)
 names(betahat.Lit3)=nm.lab.Lit3
 
-survfit.coxnet.port.Lit3=survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat=betahat.Lit3, nm.cls, siteid, dir.output, 
-                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T)
+survfit.coxnet.port.Lit3=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat=betahat.Lit3, nm.cls, siteid, dir.output, 
+                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
 
+for(mymodel in ls(betahat.port)){
+  for(submodel in ls(betahat.port[[mymodel]])){
+    betahat.port[[mymodel]][[submodel]]$VA=colMeans(do.call(rbind, betahat.port[[mymodel]][[submodel]][names(betahat.port[[mymodel]][[submodel]])%in%paste0("VA", 1:5)]),na.rm=T)
+  }
+}
 survfit.coxnet.port.betahat=NULL
-for(mymodel in ls(betahat.port)[1]){
-print(mymodel)
-tmp1=betahat.port[[mymodel]]
-for(submodel in ls(tmp1)){
-tmp2=tmp1[[submodel]]
-for(mysite in c("BIDMC", "NWU", "upenn", "VA1")){
-print(mysite)
-betahat=tmp2[[mysite]]
-survfit.coxnet.port.betahat[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
-                                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
+site.beta.list=ls(betahat.port$LabCommon.DemCls$impute)
+if("VA"%in%site.beta.list){site.beta.list=setdiff(site.beta.list, paste0("VA",1:5))}
+site.europe.list=c("FRBDX", "ICSM", "APHP", "H120", "UKFR")
+site.us.list=setdiff(site.beta.list, site.europe.list)
+
+if(currSiteId%in%site.europe.list){site.beta.keep=site.us.list}else{
+  site.beta.keep=intersect(site.europe.list, site.beta.list)
 }
+
+mymodel="Lit3.DemCls"
+submodel="impute"
+
+for(mysite in site.beta.keep){
+  print(mysite)
+  betahat=betahat.port[[mymodel]][[submodel]][[mysite]]
+  survfit.coxnet.port.betahat[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event, nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
+                                                                                                          period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
 }
-}
+
 
 ####### C statistics
 cat("C statistics \n")
 
 survfit.cstat.LabCommon.DemCls.impute=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.LabCommon, nm.cls, siteid, dir.output, 
-                                                           period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=F),error=function(e){print(e); NA})
+                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=F),error=function(e){print(e); NA})
 
 survfit.cstat.LabCommon.DemCls.ind=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.LabCommon, nm.cls, siteid, dir.output, 
-                                                        period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T),error=function(e){print(e); NA})
+                                                                 period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T),error=function(e){print(e); NA})
 
 
 survfit.cstat.Lit3.DemCls.impute=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.Lit3, nm.cls, siteid, dir.output, 
-                                                      period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=F),error=function(e){print(e); NA})
+                                                               period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=F),error=function(e){print(e); NA})
 
 survfit.cstat.Lit3.DemCls.ind=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.Lit3, nm.cls, siteid, dir.output, 
-                                                   period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T),error=function(e){print(e); NA})
+                                                            period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T),error=function(e){print(e); NA})
 
 
 save(survfit.coxnet.LabCommon.DemCls.impute=survfit.coxnet.LabCommon.DemCls.impute,

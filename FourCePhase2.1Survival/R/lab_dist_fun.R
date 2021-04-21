@@ -28,13 +28,20 @@ tmp=data_lab_clean2(code.dict, dat.x.raw[dat.x.raw$patient_num%in%patient_num.de
   
 tmp=left_join(tmp, dat.calendar,by="patient_num")
 nm.lab.all=setdiff(colnames(tmp), c("patient_num", "calendar_date", "calendar_day"))
+lab.breaks=lab.breaks.original
 if(myscale=="log"){
-tmp[,nm.lab.all]=log(tmp[,nm.lab.all])}
+tmp[,nm.lab.all]=log(tmp[,nm.lab.all])
+lab.breaks=lab.breaks.log
+}
 tmp.early=tmp[tmp$calendar_date<calendar.date.cut,]
 tmp.late=tmp[tmp$calendar_date>=calendar.date.cut,]
 
-res.early=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.early[,xx],na.rm=T, plot=F),error=function(e) NA))
-res.late=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.late[,xx],na.rm=T, plot=F), error=function(e) NA))
+res.early=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.early[,xx],
+                                                        breaks=c(lab.breaks$break.lb[lab.breaks$labname==xx]-10, seq(lab.breaks$break.lb[lab.breaks$labname==xx], lab.breaks$break.ub[lab.breaks$labname==xx],(lab.breaks$break.ub[lab.breaks$labname==xx]-lab.breaks$break.lb[lab.breaks$labname==xx])/100),lab.breaks$break.ub[lab.breaks$labname==xx]*100), 
+                                                        na.rm=T, plot=F),error=function(e) NA))
+res.late=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.late[,xx],
+                                                       breaks=c(lab.breaks$break.lb[lab.breaks$labname==xx]-10, seq(lab.breaks$break.lb[lab.breaks$labname==xx], lab.breaks$break.ub[lab.breaks$labname==xx],(lab.breaks$break.ub[lab.breaks$labname==xx]-lab.breaks$break.lb[lab.breaks$labname==xx])/100),lab.breaks$break.ub[lab.breaks$labname==xx]*100), 
+                                                       na.rm=T, plot=F), error=function(e) NA))
 names(res.early)=names(res.late)=nm.lab.all
 res[[myday.list]]=list(res.early=res.early,res.late=res.late)
 

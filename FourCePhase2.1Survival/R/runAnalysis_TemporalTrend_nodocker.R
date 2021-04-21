@@ -37,6 +37,7 @@ dat.survival$dat.analysis.severe=left_join(dat.survival$dat.analysis.severe, dat
 dat.survival$dat.analysis.deceased=left_join(dat.survival$dat.analysis.deceased, dat.cls, by="patient_num")
 dat.survival$dat.analysis.severedeceased=left_join(dat.survival$dat.analysis.severedeceased, dat.cls, by="patient_num")
 dat.survival$dat.calendar$calendar_date=substr(dat.survival$dat.calendar$calendar_date,1,7)
+dat.survival$dat.calendar=dat.survival$dat.calendar[dat.survival$dat.calendar$calendar_date<="2021-01",]
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date<"2020-03"]="2020-03"
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=="2020-04"]="2020-03"
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=="2020-06"]="2020-05"
@@ -76,6 +77,7 @@ survfit.coxridge[[nm.event]][[period.train]][[period.valid]]=survfit.coxridge.fu
 
 
 
+
 #### 6. lab distribution
 cat("6. lab distribution\n")
 
@@ -95,13 +97,13 @@ strat="max_day"
 pat.days.cut1=0
 pat.days.cut2=Inf
 days.range.list=list(c(1:14))
-  for(iii in length(days.range.list)){
-    days.range=days.range.list[[iii]]
-    tmp=lab_recoverRate_new_strat_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
-     lab.recover[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp
-    }
+for(iii in length(days.range.list)){
+  days.range=days.range.list[[iii]]
+  tmp=lab_recoverRate_new_strat_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
+  lab.recover[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp
+}
 
-  
+
 #### 9. charlson score
 cat("9. charlson score \n")
 
@@ -135,21 +137,21 @@ cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 #### 10. obfuscation
 cat("10. obfuscation\n")
 if(obfuscation==T){
-junk=obfuscation.fun(summary.report, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
-summary.report=junk$summary.report
-survfit.coxnet=junk$survfit.coxnet
-lab.dist.original=junk$lab.dist.original
-lab.dist.log=junk$lab.dist.log
-lab.summary=junk$lab.summary
-lab.recover=junk$lab.recover
+  junk=obfuscation.fun(summary.report, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
+  summary.report=junk$summary.report
+  survfit.coxnet=junk$survfit.coxnet
+  lab.dist.original=junk$lab.dist.original
+  lab.dist.log=junk$lab.dist.log
+  lab.summary=junk$lab.summary
+  lab.recover=junk$lab.recover
 }
+
 
 save(summary.report,survfit.coxnet,survfit.coxridge,
      lab.dist.original, lab.dist.log,
      lab.recover, 
      lab.summary, 
      cls.summary, cls.obs.summary, cls.early, cls.late,file=file.path(dir.output, paste0(currSiteId, "_Result.Rdata")))
-
 
 }
 
