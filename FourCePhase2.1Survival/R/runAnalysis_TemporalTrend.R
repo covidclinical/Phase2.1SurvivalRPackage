@@ -142,7 +142,7 @@ cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 cat("10. obfuscation\n")
 if(obfuscation==T){
 junk=obfuscation.fun(summary.report, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
-summary.report=junk$summary.report
+#summary.report=junk$summary.report
 survfit.coxnet=junk$survfit.coxnet
 lab.dist.original=junk$lab.dist.original
 lab.dist.log=junk$lab.dist.log
