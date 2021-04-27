@@ -154,7 +154,7 @@ save(summary.report,survfit.coxnet,survfit.coxridge,
      lab.dist.original, lab.dist.log,
      lab.recover, 
      lab.summary, 
-     cls.summary, cls.obs.summary, cls.early, cls.late,file=file.path(dir.output, paste0(currSiteId, "_Result.Rdata")))
+     cls.summary, cls.obs.summary, cls.early, cls.late,file=file.path(dir.output, paste0(currSiteId, "_2.Rdata")))
 
 }
 

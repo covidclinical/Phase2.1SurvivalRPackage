@@ -186,7 +186,7 @@ save(survfit.coxnet.LabCommon.DemCls.impute=survfit.coxnet.LabCommon.DemCls.impu
      #survfit.cstat.LabCommon.DemCls.ind=survfit.cstat.LabCommon.DemCls.ind,
      survfit.cstat.Lit3.DemCls.impute=survfit.cstat.Lit3.DemCls.impute,
      #survfit.cstat.Lit3.DemCls.ind=survfit.cstat.Lit3.DemCls.ind,
-     file=file.path(dir.output, paste0(currSiteId, "_Result_R1.Rdata")))
+     file=file.path(dir.output, paste0(currSiteId, "_1.Rdata")))
 }
 
 
