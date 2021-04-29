@@ -30,8 +30,8 @@ CV.Survfit.CSTAT.sep=function(dat.train, dat.valid, nm.event, K, is.bt, yes.cv=T
     train.fit <- coxph(junk,
                        x=TRUE, y=TRUE, method="breslow", data=dat.train.k)
     lpnew <- predict(train.fit, newdata=dat.valid.k) 
-    Surv.rsp <- Surv(dat.train.k$days_since_admission, dat.train.k$severedeceased) 
-    Surv.rsp.new <- Surv(dat.valid.k$days_since_admission, dat.valid.k$severedeceased)
+    Surv.rsp <- Surv(dat.train.k$days_since_admission, dat.train.k[,nm.event]) 
+    Surv.rsp.new <- Surv(dat.valid.k$days_since_admission, dat.valid.k[,nm.event])
     cstat=c(cstat,UnoC(Surv.rsp, Surv.rsp.new, lpnew))
   }
   cstat.cv=mean(cstat,na.rm=T)
@@ -44,8 +44,8 @@ CV.Survfit.CSTAT.sep=function(dat.train, dat.valid, nm.event, K, is.bt, yes.cv=T
     train.bt <- coxph(junk,
                        x=TRUE, y=TRUE, method="breslow", data=dat.bt)
     lpnew.bt <- predict(train.bt, newdata=dat.bt) 
-    Surv.rsp.bt <- Surv(dat.bt$days_since_admission, dat.bt$severedeceased) 
-    Surv.rsp.new.bt <- Surv(dat.bt$days_since_admission, dat.bt$severedeceased)
+    Surv.rsp.bt <- Surv(dat.bt$days_since_admission, dat.bt[,nm.event]) 
+    Surv.rsp.new.bt <- Surv(dat.bt$days_since_admission, dat.bt[,nm.event])
     UnoC(Surv.rsp.bt, Surv.rsp.new.bt, lpnew.bt)
     }))
   }else{cstat.bt=NA}
