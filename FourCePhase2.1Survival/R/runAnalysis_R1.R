@@ -93,6 +93,9 @@ survfit.coxnet.LabCommon.DemCls.impute=survfit.coxnet.R1.fun(dat.survival, nm.ev
 #survfit.coxnet.LabCommon.DemCls.ind=survfit.coxnet.R1.fun(dat.survival, nm.event, nm.dem, nm.lab.keep=nm.lab.LabCommon, nm.cls, siteid, dir.output, 
 #                                                          period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=T)
 
+survfit.coxnet.LabAll.DemCls.impute=survfit.coxnet.R1.fun(dat.survival, nm.event, nm.dem, nm.lab.keep=nm.lab.LabAll, nm.cls, siteid, dir.output, 
+                                                             period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=F)
+
 
 survfit.coxnet.Lit3.DemCls.impute=survfit.coxnet.R1.fun(dat.survival, nm.event, nm.dem, nm.lab.keep=nm.lab.Lit3, nm.cls, siteid, dir.output, 
                                                         period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, include.ind=F)
@@ -175,6 +178,7 @@ survfit.cstat.Lit3.DemCls.impute=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.
 save(survfit.coxnet.LabCommon.DemCls.impute=survfit.coxnet.LabCommon.DemCls.impute,
      #survfit.coxnet.LabCommon.DemCls.ind=survfit.coxnet.LabCommon.DemCls.ind,
      survfit.coxnet.Lit3.DemCls.impute=survfit.coxnet.Lit3.DemCls.impute,
+     survfit.coxnet.LabAll.DemCls.impute=survfit.coxnet.LabAll.DemCls.impute,
      #survfit.coxnet.Lit3.DemCls.ind=survfit.coxnet.Lit3.DemCls.ind,
      #survfit.coxnet.LabSingle.ind=survfit.coxnet.LabSingle.ind,              
      survfit.lab.t=survfit.lab.t,
