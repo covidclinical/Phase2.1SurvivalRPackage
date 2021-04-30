@@ -186,6 +186,7 @@ for(nm.event in c("deceased","severedeceased")){
 save(survfit.coxnet.LabCommon.DemCls.impute=survfit.coxnet.LabCommon.DemCls.impute,
      #survfit.coxnet.LabCommon.DemCls.ind=survfit.coxnet.LabCommon.DemCls.ind,
      survfit.coxnet.Lit3.DemCls.impute=survfit.coxnet.Lit3.DemCls.impute,
+     survfit.coxnet.LabAll.DemCls.impute=survfit.coxnet.LabAll.DemCls.impute,
      #survfit.coxnet.Lit3.DemCls.ind=survfit.coxnet.Lit3.DemCls.ind,
      #survfit.coxnet.LabSingle.ind=survfit.coxnet.LabSingle.ind,              
      survfit.lab.t=survfit.lab.t,
