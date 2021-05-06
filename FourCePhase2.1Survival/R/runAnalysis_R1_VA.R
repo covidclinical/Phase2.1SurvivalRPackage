@@ -130,7 +130,8 @@ for(nm.event in c("deceased", "severedeceased")){
 ## coefficient from literature
 cat("7. transportability \n")
 nm.event="severedeceased"
-data(betahat.port, package="FourCePhase2.1Survival")
+#data(betahat.port, package="FourCePhase2.1Survival")
+load("data/betahat.port.rda")
 
 betahat.Lit3=c(0.013,-1.984, 0.112/1000)
 names(betahat.Lit3)=nm.lab.Lit3
@@ -166,6 +167,20 @@ for(mysite in site.beta.keep){
   }
 }
 
+###
+survfit.coxnet.port.betahat.deceased=NULL
+#data(betahat.port.deceased, package="FourCePhase2.1Survival")
+load("data/betahat.port.deceased.rda")
+
+submodel="impute"
+for(mysite in ls(betahat.port.deceased$Lit3.DemCls$impute)){
+  print(mysite)
+  for(mymodel in c("Lit3.DemCls", "LabCommon.DemCls")){
+    betahat=betahat.port.deceased[[mymodel]][[submodel]][[mysite]]
+    survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
+                                                                                                                     period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
+  }
+}
 ####### C statistics
 cat("C statistics \n")
 for(nm.event in c("deceased","severedeceased")){
@@ -194,6 +209,7 @@ save(survfit.coxnet.LabCommon.DemCls.impute=survfit.coxnet.LabCommon.DemCls.impu
      survfit.lab.baseline.rm.event0=survfit.lab.baseline.rm.event0,
      survfit.coxnet.port.Lit3=survfit.coxnet.port.Lit3,
      survfit.coxnet.port.betahat=survfit.coxnet.port.betahat,
+     survfit.coxnet.port.betahat.deceased=survfit.coxnet.port.betahat.deceased,
      survfit.cstat.LabCommon.DemCls.impute=survfit.cstat.LabCommon.DemCls.impute,
      #survfit.cstat.LabCommon.DemCls.ind=survfit.cstat.LabCommon.DemCls.ind,
      survfit.cstat.Lit3.DemCls.impute=survfit.cstat.Lit3.DemCls.impute,
