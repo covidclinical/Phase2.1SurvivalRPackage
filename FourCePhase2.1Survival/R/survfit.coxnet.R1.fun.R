@@ -58,10 +58,14 @@ survfit.coxnet.R1.fun=function(dat.survival, nm.event, nm.lab.keep, nm.dem, nm.c
   roc.sep.cov.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid, score=score.sep.cov.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA)
   auc.sep.cov.se=tryCatch(apply(junk.cv.cov$auc.sep.cov.bt,2,sd), error=function(e) NA)
   
+  xx=t(data.matrix(dat.train[,-(1:3)]))%*%data.matrix(dat.train[,-(1:3)])
+  N.train=dim(dat.train)[1]
   return(list(betahat.cov=betahat.cov, 
               dat.sd=dat.sd,
               roc.sep.cov.cv=roc.sep.cov.cv,
-              auc.sep.cov.se=auc.sep.cov.se
+              auc.sep.cov.se=auc.sep.cov.se,
+              xx=xx,
+              N.train=N.train
   ))
 }
 

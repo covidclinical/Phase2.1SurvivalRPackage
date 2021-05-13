@@ -1,8 +1,17 @@
-obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary, cls.early, cls.late, obfuscation.level){
+obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary, cls.early, cls.late, obfuscation.level){
+  obfuscation.level=as.numeric(obfuscation.level)
   summary.report[summary.report<obfuscation.level]=-99
-  nm.check=names(survfit.coxnet$deceased$all$all)[substr(names(survfit.coxnet$deceased$all$all),1,5)=="score"]
+  nm.check= c("n.risk", "n.event", "n.censor")
   for(nm in nm.check){
-    survfit.coxnet$deceased$all$all[[nm]][["28"]][survfit.coxnet$deceased$all$all[[nm]][["28"]]<obfuscation.level]=-99
+    tmp=as.numeric(as.character(KM[[nm]]))
+    tmp[tmp<obfuscation.level]=-99
+    KM[[nm]]=tmp
+  }
+  nm.check=names(survfit.coxnet$deceased$all$all[["9lab"]])[substr(names(survfit.coxnet$deceased$all$all[["9lab"]]),1,5)=="score"]
+  for(model.setting in c("3lab", "9lab")){
+  for(nm in nm.check){
+    survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]][survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]]<obfuscation.level]=-99
+  }
   }
   
   for(aa in ls(lab.dist.original$res.all)){
@@ -109,9 +118,10 @@ obfuscation.fun=function(summary.report, survfit.coxnet,lab.dist.original, lab.d
     }
   }
   
-  lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
+  #lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
   
   return(list(summary.report=summary.report, 
+              KM=KM,
               survfit.coxnet=survfit.coxnet,
               lab.dist.original=lab.dist.original, 
               lab.dist.log=lab.dist.log, 
