@@ -23,7 +23,16 @@ is.rmout=F
 is.onlyCLS=F
 
 nm.lab.all=c("total_bilirubin","creatinine", "Ferritin", "D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin","neutrophil_count")
-nm.lab.keep=c("D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin")
+nm.3lab=c("D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin")
+nm.9lab=c("alanine_aminotransferase_ALT",     
+          "albumin",
+          "aspartate_aminotransferase_AST",
+          "creatinine",
+          "C_reactive_protein_CRP_Normal_Sensitivity",
+          "total_bilirubin",
+          "white_blood_cell_count_Leukocytes",
+          "lymphocyte_count",
+          "neutrophil_count")
 
 #### 3. data pivot (prepare survival data and charlson)
 cat("3. data pivot\n")
@@ -64,6 +73,7 @@ if(is.onlyCLS==T){
 cat("4. summary report\n")
 
 summary.report=summary.report.fun(dat.survival, siteid, dir.output)
+KM <- survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased)
 
 #### 5. coxnet
 cat("5. coxnet \n")
@@ -72,12 +82,15 @@ survfit.coxnet=survfit.coxridge=NULL
 period.valid="all"
 nm.event="deceased"
 period.train="all"
-survfit.coxnet[[nm.event]][[period.train]][[period.valid]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-                                          period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
-
-survfit.coxridge[[nm.event]][[period.train]][[period.valid]]=survfit.coxridge.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-                                                                                       period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
-
+for(model.setting in c("3lab", "9lab")){
+  nm.lab.keep=get(paste0("nm.", model.setting))
+  survfit.coxnet[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
+                                                                                                 period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
+  
+  survfit.coxridge[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxridge.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
+                                                                                                     period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
+  
+}
 
 
 
@@ -140,8 +153,9 @@ cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 #### 10. obfuscation
 cat("10. obfuscation\n")
 if(obfuscation==T){
-  junk=obfuscation.fun(summary.report, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
+  junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
   #summary.report=junk$summary.report
+  KM=junk$KM,
   survfit.coxnet=junk$survfit.coxnet
   lab.dist.original=junk$lab.dist.original
   lab.dist.log=junk$lab.dist.log
@@ -150,7 +164,7 @@ if(obfuscation==T){
 }
 
 
-save(summary.report,survfit.coxnet,survfit.coxridge,
+save(summary.report,KM, survfit.coxnet,survfit.coxridge,
      lab.dist.original, lab.dist.log,
      lab.recover, 
      lab.summary, 
