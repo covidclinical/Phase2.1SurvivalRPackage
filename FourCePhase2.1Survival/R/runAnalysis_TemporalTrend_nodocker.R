@@ -155,7 +155,7 @@ cat("10. obfuscation\n")
 if(obfuscation==T){
   junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
   #summary.report=junk$summary.report
-  KM=junk$KM,
+  KM=junk$KM
   survfit.coxnet=junk$survfit.coxnet
   lab.dist.original=junk$lab.dist.original
   lab.dist.log=junk$lab.dist.log
