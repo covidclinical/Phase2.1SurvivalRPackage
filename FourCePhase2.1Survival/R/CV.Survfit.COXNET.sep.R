@@ -13,17 +13,19 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
   Z.valid= dat.valid[,setdiff(colnames(dat.valid), c("patient_num", "days_since_admission", nm.event))]
   
   if(yes.cv==T){
-    lambda.grid=exp(seq(log(lamhat)-1, log(lamhat)+1,0.01))
+    #lambda.grid=exp(seq(log(lamhat)-1, log(lamhat)+10,0.01))
+    lambda.grid= 10^seq(-4,0,0.01)
+    
   nk=floor(nn/K)
   yyi=array(NA, c(nn, length(t0.all)))
   yyi.sep.all=yyi.sep.cov=yyi.sep.dem=yyi.sep.lab=yyi.sep.cls=rep(NA,nn)
   
-
   for(k in 1:K){
     pnum.v = pnum.valid[1:nk + (k-1)*nk]
     if(k==K){pnum.v=pnum.valid[(nk+(k-2)*nk+1):length(pnum.valid)]}
     pnum.t = setdiff(pnum.train,pnum.v)
-    beta.t = tryCatch(Est.ALASSO.GLMNET(dat.train[dat.train[,1]%in%pnum.t,-1], fam0="Cox", Wi=NULL, lambda.grid=lambda.grid)$bhat.modBIC,error=function(e) NA)
+    junk=tryCatch(Est.ALASSO.GLMNET(dat.train[dat.train[,1]%in%pnum.t,-1], fam0="Cox", Wi=NULL, lambda.grid=lambda.grid),error=function(e) NA)
+    beta.t = tryCatch(junk$bhat.modBIC,error=function(e) NA)
     junk=do.call(cbind,lapply(t0.all, function(t0) 
       1-FUN.predict.cox(newZ=dat.valid[dat.valid[,1]%in%pnum.v,-c(1:3)],beta=beta.t,X=dat.train[,2],d=dat.train[,3],Z=dat.train[,-c(1:3)],t0=t0)
     ))
@@ -47,11 +49,11 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
   colnames(score.sep.all.cv)=colnames(score.sep.cov.cv)=c("patient_num", "score")
   
   if(is.bt==T){
-    auc.sep.cov.bt=do.call(rbind,lapply(1:100, function(myseed){
+    auc.sep.cov.bt=tryCatch(do.call(rbind,lapply(1:100, function(myseed){
     set.seed(myseed)
     dat.sample=dat.train[sample(1:dim(dat.train)[1], replace=T),]
-    betahat.bt=tryCatch(Est.ALASSO.GLMNET(dat.sample[,-1], fam0="Cox", Wi=NULL, lambda.grid=lamhat)$bhat.modBIC,error=function (e) NA)
-    if(length(betahat.bt)!=1){
+    betahat.bt=tryCatch(Est.ALASSO.GLMNET(dat.sample[,-1], fam0="Cox", Wi=NULL, lambda.grid=lambda.grid)$bhat.modBIC,error=function (e) NA)
+    if(length(betahat.bt)!=1 & sum(betahat.bt,na.rm=T)!=0){
     yyi.sep.cov=data.matrix(dat.sample[,nm.cov])%*%betahat.bt[nm.cov]
     roc.sep.cov.bt=ROC.Survfit.FUN(dat.label=dat.sample, score=data.frame(patient_num=dat.sample[,"patient_num"],score=yyi.sep.cov), t0.all, nm.event, ipw=F, is.sep=T)
     auc.sep.cov.bt=unlist(lapply(ls(roc.sep.cov.bt), function(ll) roc.sep.cov.bt[[ll]]$auc))
@@ -60,7 +62,8 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     }
     auc.sep.cov.bt
     }
-    ))}else{
+    )), error=function(e) NA)
+    }else{
     auc.sep.cov.bt=NA
     }
   return(list(score.cv=score.cv, 

@@ -33,9 +33,10 @@ dat.prep.fun=function(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls){
   colnames(dat)=gsub("race_new", "race", colnames(dat))
   nm.lab.new=setdiff(colnames(dat),c("patient_num", "days_since_admission", "severedeceased", "deceased","calendar_date","calendar_day",        
                                      "age","sex","race"))
-  nm.lab.new=setdiff(nm.lab.new, nm.lab.new[grepl("obs_",nm.lab.new)])
-  if("DD"%in%nm.lab.new){
-  dat$DD=log(dat$DD+1)}
+  nm.lab.new=setdiff(nm.lab.new, c(nm.lab.new[grepl("obs_",nm.lab.new)],"charlson_score"))
+  #if("DD"%in%nm.lab.new){
+  #dat$DD=log(dat$DD+1)}
+  dat[,colnames(dat)%in%nm.lab.new]=log(dat[,colnames(dat)%in%nm.lab.new]+1)
   dat
   }
 
