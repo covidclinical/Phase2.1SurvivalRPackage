@@ -73,7 +73,7 @@ if(is.onlyCLS==T){
 cat("4. summary report\n")
 
 summary.report=summary.report.fun(dat.survival, siteid, dir.output)
-KM <- survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased)
+KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased),error=function(e) NA)
 
 #### 5. coxnet
 cat("5. coxnet \n")
@@ -83,6 +83,7 @@ period.valid="all"
 nm.event="deceased"
 period.train="all"
 for(model.setting in c("3lab", "9lab")){
+  print(model.setting)
   nm.lab.keep=get(paste0("nm.", model.setting))
   survfit.coxnet[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
                                                                                                  period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
@@ -155,7 +156,7 @@ cat("10. obfuscation\n")
 if(obfuscation==T){
   junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
   #summary.report=junk$summary.report
-  KM=junk$KM,
+  KM=junk$KM
   survfit.coxnet=junk$survfit.coxnet
   lab.dist.original=junk$lab.dist.original
   lab.dist.log=junk$lab.dist.log

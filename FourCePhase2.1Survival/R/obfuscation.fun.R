@@ -1,12 +1,14 @@
 obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary, cls.early, cls.late, obfuscation.level){
   obfuscation.level=as.numeric(obfuscation.level)
   summary.report[summary.report<obfuscation.level]=-99
+  tryCatch({
   nm.check= c("n.risk", "n.event", "n.censor")
   for(nm in nm.check){
     tmp=as.numeric(as.character(KM[[nm]]))
     tmp[tmp<obfuscation.level]=-99
     KM[[nm]]=tmp
-  }
+  }},error=function(e) NA)
+  
   nm.check=names(survfit.coxnet$deceased$all$all[["9lab"]])[substr(names(survfit.coxnet$deceased$all$all[["9lab"]]),1,5)=="score"]
   for(model.setting in c("3lab", "9lab")){
   for(nm in nm.check){
