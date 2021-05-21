@@ -173,8 +173,7 @@ cat("10. maxmin\n")
 tryCatch({
   id.maxmin=which(toupper(currSiteId)==toupper(ls(beta.maxmin)))
   beta.maxmin.int=beta.maxmin[[id.maxmin]]
-  
-  survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
+  survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.9lab, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
 },error=function(e) {print(e);return(NA)})
 #### 11. obfuscation
 cat("11. obfuscation\n")

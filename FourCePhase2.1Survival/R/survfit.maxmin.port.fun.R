@@ -1,4 +1,5 @@
-survfit.maxmin.port.fun=function(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T){
+survfit.maxmin.port.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T){
+  nm.dem=c("age_group_new", "sex", "race_new")
   
   #cat("1. data preparing \n")
   if(include.ind==T){dat0=dat.prep.fun(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls)}
