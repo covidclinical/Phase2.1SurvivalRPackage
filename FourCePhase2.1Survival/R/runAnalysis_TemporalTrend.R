@@ -15,7 +15,7 @@ data(code.dict, package="FourCePhase2.1Data")
 data(betahat.port, package="FourCePhase2.1Survival")
 data(lab.breaks.log, package="FourCePhase2.1Survival")
 data(lab.breaks.original, package="FourCePhase2.1Survival")
-
+data(beta.maxmin, package="FourCePhase2.1Survival")
 #### 2. set up parameters
 cat("2. set up parameters\n")
 
@@ -35,6 +35,16 @@ nm.9lab=c("alanine_aminotransferase_ALT",
                    "white_blood_cell_count_Leukocytes",
                    "lymphocyte_count",
                    "neutrophil_count")
+
+nm.10lab=c("alanine_aminotransferase_ALT",     
+          "albumin",
+          "aspartate_aminotransferase_AST",
+          "creatinine",
+          "C_reactive_protein_CRP_Normal_Sensitivity",
+          "total_bilirubin",
+          "white_blood_cell_count_Leukocytes",
+          "lymphocyte_count",
+          "neutrophil_count", "D_dimer")
 
 #### 3. data pivot (prepare survival data and charlson)
 cat("3. data pivot\n")
@@ -75,7 +85,9 @@ if(is.onlyCLS==T){
 cat("4. summary report\n")
 
 summary.report=summary.report.fun(dat.survival, siteid, dir.output)
-KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased),error=function(e) NA)
+dem.report=dem.report.fun(dat.survival, siteid, dir.output)
+  
+KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased),error=function(e) {print(e);return(NA)})
 
 #### 5. coxnet
 cat("5. coxnet \n")
@@ -84,14 +96,14 @@ survfit.coxnet=survfit.coxridge=NULL
 period.valid="all"
 nm.event="deceased"
 period.train="all"
-for(model.setting in c("3lab", "9lab")){
+for(model.setting in c("9lab", "10lab")){
 print(model.setting)
 nm.lab.keep=get(paste0("nm.", model.setting))
 survfit.coxnet[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
                                           period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
 
-survfit.coxridge[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxridge.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-                                                                                       period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
+#survfit.coxridge[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxridge.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
+#                                                                                       period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
 
 }
 
@@ -116,7 +128,7 @@ pat.days.cut2=Inf
 days.range.list=list(c(1:14))
   for(iii in length(days.range.list)){
     days.range=days.range.list[[iii]]
-    tmp=lab_recoverRate_new_strat_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
+    tmp=lab_recoverRate_new_strat_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, nm.lab.keep=nm.10lab, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
      lab.recover[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp
     }
 
@@ -132,9 +144,14 @@ junk$calendar_date=substr(junk$calendar_date,1,7)
 junk2=junk
 
 tmp=setDT(junk)
-tmp=data.frame(tmp[,lapply(.SD,mean,na.rm=TRUE),by=calendar_date])
-tmp=tmp[order(tmp$calendar_date),c("calendar_date", "charlson_score")]
-cls.summary=tmp
+tmp.mean=data.frame(tmp[,lapply(.SD,mean,na.rm=TRUE),by=calendar_date])
+tmp.mean=tmp.mean[order(tmp.mean$calendar_date),c("calendar_date", "charlson_score")]
+colnames(tmp.mean)[2]="charlson_score_mean"
+tmp.sd=data.frame(tmp[,lapply(.SD,sd,na.rm=TRUE),by=calendar_date])
+tmp.sd=tmp.sd[order(tmp.sd$calendar_date),c("calendar_date", "charlson_score")]
+colnames(tmp.sd)[2]="charlson_score_sd"
+
+cls.summary=data.frame(tmp.mean, charlson_score_sd=tmp.sd[,2])
 
 junk2$obs=1-is.na(junk2$charlson_score)
 tmp=setDT(junk2)
@@ -151,11 +168,19 @@ colnames(cls.obs.summary)[3]="obs_sum"
 cls.early=hist(junk2$charlson_score[junk2$calendar_date<"2020-07"],plot=F)
 cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 
-#### 10. obfuscation
-cat("10. obfuscation\n")
+#### 10. maxmin
+cat("10. maxmin\n")
+tryCatch({
+id.maxmin=which(toupper(currSiteId)==toupper(ls(beta.maxmin)))
+beta.maxmin.int=beta.maxmin[[id.maxmin]]
+
+survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.9lab, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
+},error=function(e) {print(e);return(NA)})
+#### 11. obfuscation
+cat("11. obfuscation\n")
 if(obfuscation==T){
 junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
-#summary.report=junk$summary.report
+summary.report=junk$summary.report
 KM=junk$KM
 survfit.coxnet=junk$survfit.coxnet
 lab.dist.original=junk$lab.dist.original
@@ -164,12 +189,16 @@ lab.summary=junk$lab.summary
 lab.recover=junk$lab.recover
 }
 
-save(summary.report,KM, survfit.coxnet,survfit.coxridge,
+save(summary.report,
+     dem.report=dem.report,
+     KM, 
+     survfit.coxnet,#survfit.coxridge,
      lab.dist.original, lab.dist.log,
      lab.recover, 
      lab.summary, 
-     cls.summary, cls.obs.summary, cls.early, cls.late,file=file.path(dir.output, paste0(currSiteId, "_Result.Rdata")))
-
+     cls.summary, cls.obs.summary, cls.early, cls.late,
+     survfit.maxmin.port=survfit.maxmin.port,
+     file=file.path(dir.output, paste0(currSiteId, "_Result.Rdata")))
 }
 
 
