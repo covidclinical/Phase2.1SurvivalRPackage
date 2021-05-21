@@ -66,93 +66,93 @@ survfit.coxnet.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, siteid,
   junk.train.cov=Est.Survfit.COXNET(dat.train, nm.event, multi.formulas, t0.all)
   betahat.cov=junk.train.cov$betahat.modBIC
   lamhat.cov=junk.train.cov$lamhat
-  junk.A.cov=tryCatch(Score.A.FUN(data=dat.train[,-1],betahat=betahat.cov,rtn='Score+A'), error=function(e) NA)
-  negA.cov=tryCatch(junk.A.cov$neg_info_mat, error=function(e) NA)
+  junk.A.cov=tryCatch(Score.A.FUN(data=dat.train[,-1],betahat=betahat.cov,rtn='Score+A'), error=function(e) {print(e);return(NA)})
+  negA.cov=tryCatch(junk.A.cov$neg_info_mat, error=function(e) {print(e);return(NA)})
 
   junk.train.dem=Est.Survfit.COXNET(dat.train.dem, nm.event, multi.formulas.dem, t0.all)
   betahat.dem=junk.train.dem$betahat.modBIC
   lamhat.dem=junk.train.dem$lamhat
-  junk.A.dem=tryCatch(Score.A.FUN(data=dat.train.dem[,-1],betahat=betahat.dem,rtn='Score+A'), error=function(e) NA)
-  negA.dem=tryCatch(junk.A.dem$neg_info_mat, error=function(e) NA)
+  junk.A.dem=tryCatch(Score.A.FUN(data=dat.train.dem[,-1],betahat=betahat.dem,rtn='Score+A'), error=function(e) {print(e);return(NA)})
+  negA.dem=tryCatch(junk.A.dem$neg_info_mat, error=function(e) {print(e);return(NA)})
   
   junk.train.lab=Est.Survfit.COXNET(dat.train.lab, nm.event, multi.formulas.lab, t0.all)
   betahat.lab=junk.train.lab$betahat.modBIC
   lamhat.lab=junk.train.lab$lamhat
-  junk.A.lab=tryCatch(Score.A.FUN(data=dat.train.lab[,-1],betahat=betahat.lab,rtn='Score+A'), error=function(e) NA)
-  negA.lab=tryCatch(junk.A.lab$neg_info_mat, error=function(e) NA)
+  junk.A.lab=tryCatch(Score.A.FUN(data=dat.train.lab[,-1],betahat=betahat.lab,rtn='Score+A'), error=function(e) {print(e);return(NA)})
+  negA.lab=tryCatch(junk.A.lab$neg_info_mat, error=function(e) {print(e);return(NA)})
   
   junk.train.cls=Est.Survfit.COXNET(dat.train.cls, nm.event, multi.formulas.cls, t0.all)
   betahat.cls=junk.train.cls$betahat.modBIC
   lamhat.cls=junk.train.cls$lamhat
-  junk.A.cls=tryCatch(Score.A.FUN(data=dat.train.cls[,-1],betahat=betahat.cls,rtn='Score+A'), error=function(e) NA)
-  negA.cls=tryCatch(junk.A.cls$neg_info_mat, error=function(e) NA)
+  junk.A.cls=tryCatch(Score.A.FUN(data=dat.train.cls[,-1],betahat=betahat.cls,rtn='Score+A'), error=function(e) {print(e);return(NA)})
+  negA.cls=tryCatch(junk.A.cls$neg_info_mat, error=function(e) {print(e);return(NA)})
   
   cat("validation \n")
   ##if there is no overlap between dat.train and dat.valid, then choose yes.cv=F
-  junk.cv.cov= tryCatch(CV.Survfit.COXNET.sep.sep(dat.train=dat.train, dat.valid=dat.valid, betahat=betahat.cov, lamhat=lamhat.cov, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) NA)
-  junk.cv.dem= tryCatch(CV.Survfit.COXNET.sep(dat.train=dat.train.dem, dat.valid=dat.valid.dem, betahat=betahat.dem, lamhat=lamhat.dem, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) NA)
-  junk.cv.lab= tryCatch(CV.Survfit.COXNET.sep(dat.train=dat.train.lab, dat.valid=dat.valid.lab, betahat=betahat.lab, lamhat=lamhat.lab, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) NA)
-  junk.cv.cls= tryCatch(CV.Survfit.COXNET.sep(dat.train=dat.train.cls, dat.valid=dat.valid.cls, betahat=betahat.cls, lamhat=lamhat.cls, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) NA)
+  junk.cv.cov= tryCatch(CV.Survfit.COXNET.sep.sep(dat.train=dat.train, dat.valid=dat.valid, betahat=betahat.cov, lamhat=lamhat.cov, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) {print(e);return(NA)})
+  junk.cv.dem= tryCatch(CV.Survfit.COXNET.sep(dat.train=dat.train.dem, dat.valid=dat.valid.dem, betahat=betahat.dem, lamhat=lamhat.dem, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) {print(e);return(NA)})
+  junk.cv.lab= tryCatch(CV.Survfit.COXNET.sep(dat.train=dat.train.lab, dat.valid=dat.valid.lab, betahat=betahat.lab, lamhat=lamhat.lab, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) {print(e);return(NA)})
+  junk.cv.cls= tryCatch(CV.Survfit.COXNET.sep(dat.train=dat.train.cls, dat.valid=dat.valid.cls, betahat=betahat.cls, lamhat=lamhat.cls, t0.all=t0.all, nm.event=nm.event, K=K, is.bt=T, yes.cv=T),error=function(e) {print(e);return(NA)})
 
-  score.sep.cov.cv=tryCatch(junk.cv.cov$score.sep.cov.cv,error=function(e) NA)
-  score.sep.dem.cv=tryCatch(junk.cv.dem$score.sep.cov.cv,error=function(e) NA)
-  score.sep.lab.cv=tryCatch(junk.cv.lab$score.sep.cov.cv,error=function(e) NA)
-  score.sep.cls.cv=tryCatch(junk.cv.cls$score.sep.cov.cv,error=function(e) NA)
+  score.sep.cov.cv=tryCatch(junk.cv.cov$score.sep.cov.cv,error=function(e) {print(e);return(NA)})
+  score.sep.dem.cv=tryCatch(junk.cv.dem$score.sep.cov.cv,error=function(e) {print(e);return(NA)})
+  score.sep.lab.cv=tryCatch(junk.cv.lab$score.sep.cov.cv,error=function(e) {print(e);return(NA)})
+  score.sep.cls.cv=tryCatch(junk.cv.cls$score.sep.cov.cv,error=function(e) {print(e);return(NA)})
 
-  junk.bt=tryCatch(junk.cv.cov$junk.bt,error=function(e) NA)
-  score.sep.cov.bt=tryCatch(lapply(1:length(junk.bt),function(ll) junk.bt[[ll]]$score.sep.cov.bt),error=function(e) NA)
+  junk.bt=tryCatch(junk.cv.cov$junk.bt,error=function(e) {print(e);return(NA)})
+  score.sep.cov.bt=tryCatch(lapply(1:length(junk.bt),function(ll) junk.bt[[ll]]$score.sep.cov.bt),error=function(e) {print(e);return(NA)})
   #score.sep.cov.dem.bt=tryCatch(lapply(1:length(junk.bt),function(ll) junk.bt[[ll]]$score.sep.dem.bt),error=function(e) NA)
   #score.sep.cov.lab.bt=tryCatch(lapply(1:length(junk.bt),function(ll) junk.bt[[ll]]$score.sep.lab.bt),error=function(e) NA)
   #score.sep.cov.cls.bt=tryCatch(lapply(1:length(junk.bt),function(ll) junk.bt[[ll]]$score.sep.cls.bt),error=function(e) NA)
   
-  score.sep.dem.bt=tryCatch(junk.cv.dem$score.sep.cov.bt,error=function(e) NA)
-  score.sep.lab.bt=tryCatch(junk.cv.lab$score.sep.cov.bt,error=function(e) NA)
-  score.sep.cls.bt=tryCatch(junk.cv.cls$score.sep.cov.bt,error=function(e) NA)
+  score.sep.dem.bt=tryCatch(junk.cv.dem$score.sep.cov.bt,error=function(e) {print(e);return(NA)})
+  score.sep.lab.bt=tryCatch(junk.cv.lab$score.sep.cov.bt,error=function(e) {print(e);return(NA)})
+  score.sep.cls.bt=tryCatch(junk.cv.cls$score.sep.cov.bt,error=function(e) {print(e);return(NA)})
   
   cat("accuracy parameters by days since admission\n")
-  roc.sep.cov.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid, score=score.sep.cov.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA)
-  roc.sep.dem.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid.dem, score=score.sep.dem.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA)
-  roc.sep.lab.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid.lab, score=score.sep.lab.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA)
-  roc.sep.cls.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid.cls, score=score.sep.cls.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA)
+  roc.sep.cov.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid, score=score.sep.cov.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  roc.sep.dem.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid.dem, score=score.sep.dem.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  roc.sep.lab.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid.lab, score=score.sep.lab.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  roc.sep.cls.cv=tryCatch(ROC.Survfit.FUN(dat.label=dat.valid.cls, score=score.sep.cls.cv, t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)})
 
-  roc.sep.cov.bt=lapply(1:length(score.sep.cov.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cov.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
+  roc.sep.cov.bt=lapply(1:length(score.sep.cov.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cov.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)}))
   #roc.sep.cov.dem.bt=lapply(1:length(score.sep.cov.dem.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cov.dem.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
   #roc.sep.cov.lab.bt=lapply(1:length(score.sep.cov.lab.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cov.lab.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
   #roc.sep.cov.cls.bt=lapply(1:length(score.sep.cov.cls.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cov.cls.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
   
-  roc.sep.dem.bt=lapply(1:length(score.sep.dem.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.dem.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
-  roc.sep.lab.bt=lapply(1:length(score.sep.lab.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.lab.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
-  roc.sep.cls.bt=lapply(1:length(score.sep.cls.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cls.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) NA))
+  roc.sep.dem.bt=lapply(1:length(score.sep.dem.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.dem.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)}))
+  roc.sep.lab.bt=lapply(1:length(score.sep.lab.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.lab.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)}))
+  roc.sep.cls.bt=lapply(1:length(score.sep.cls.bt), function(ll) tryCatch(ROC.Survfit.FUN.bt(dat.label=dat.valid, score=score.sep.cls.bt[[ll]], t0.all, nm.event, ipw=F, is.sep=T),error=function(e) {print(e);return(NA)}))
   
   cat("accuracy parameters by calendar month\n")
-  roc.sep.cov.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.cov.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA)
-  roc.sep.dem.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.dem.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA)
-  roc.sep.lab.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.lab.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA)
-  roc.sep.cls.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.cls.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA)
+  roc.sep.cov.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.cov.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  roc.sep.dem.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.dem.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  roc.sep.lab.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.lab.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  roc.sep.cls.cv.bymonth=tryCatch(ROC.Survfit.bymonth.FUN(dat.label=dat.valid0, score=score.sep.cls.cv, t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
 
-  roc.sep.cov.bt.bymonth=lapply(1:length(score.sep.cov.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cov.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
+  roc.sep.cov.bt.bymonth=lapply(1:length(score.sep.cov.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cov.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
   #roc.sep.cov.dem.bt.bymonth=lapply(1:length(score.sep.cov.dem.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cov.dem.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
   #roc.sep.cov.lab.bt.bymonth=lapply(1:length(score.sep.cov.lab.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cov.lab.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
   #roc.sep.cov.cls.bt.bymonth=lapply(1:length(score.sep.cov.cls.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cov.cls.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
   
-  roc.sep.dem.bt.bymonth=lapply(1:length(score.sep.dem.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.dem.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
-  roc.sep.lab.bt.bymonth=lapply(1:length(score.sep.lab.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.lab.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
-  roc.sep.cls.bt.bymonth=lapply(1:length(score.sep.cls.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cls.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) NA))
+  roc.sep.dem.bt.bymonth=lapply(1:length(score.sep.dem.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.dem.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
+  roc.sep.lab.bt.bymonth=lapply(1:length(score.sep.lab.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.lab.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
+  roc.sep.cls.bt.bymonth=lapply(1:length(score.sep.cls.bt), function(ll) tryCatch(ROC.Survfit.bymonth.FUN.bt(dat.label=dat.valid0, score=score.sep.cls.bt[[ll]], t0.all, nm.event, ipw=F, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
   
   cat("score categories by calendar month\n")
-  score.sep.cov.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.cv, roc.sep.cov.cv, is.combine=F, is.sep=T),error=function(e) NA)
-  score.sep.dem.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.dem.cv, roc.sep.dem.cv, is.combine=F, is.sep=T),error=function(e) NA)
-  score.sep.lab.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.lab.cv, roc.sep.lab.cv, is.combine=F, is.sep=T),error=function(e) NA)
-  score.sep.cls.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cls.cv, roc.sep.cls.cv, is.combine=F, is.sep=T),error=function(e) NA)
+  score.sep.cov.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.cv, roc.sep.cov.cv, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  score.sep.dem.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.dem.cv, roc.sep.dem.cv, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  score.sep.lab.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.lab.cv, roc.sep.lab.cv, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
+  score.sep.cls.bymonth=tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cls.cv, roc.sep.cls.cv, is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)})
 
-  score.sep.cov.bymonth.bt=lapply(1:length(score.sep.cov.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.bt[[ll]], roc.sep.cov.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
+  score.sep.cov.bymonth.bt=lapply(1:length(score.sep.cov.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.bt[[ll]], roc.sep.cov.bt[[ll]], is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
   #score.sep.cov.dem.bymonth.bt=lapply(1:length(score.sep.cov.dem.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.dem.bt[[ll]], roc.sep.cov.dem.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
   #score.sep.cov.lab.bymonth.bt=lapply(1:length(score.sep.cov.lab.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.lab.bt[[ll]], roc.sep.cov.lab.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
   #score.sep.cov.cls.bymonth.bt=lapply(1:length(score.sep.cov.cls.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cov.cls.bt[[ll]], roc.sep.cov.cls.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
   
-  score.sep.dem.bymonth.bt=lapply(1:length(score.sep.dem.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.dem.bt[[ll]], roc.sep.dem.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
-  score.sep.lab.bymonth.bt=lapply(1:length(score.sep.lab.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.lab.bt[[ll]], roc.sep.lab.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
-  score.sep.cls.bymonth.bt=lapply(1:length(score.sep.cls.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cls.bt[[ll]], roc.sep.cls.bt[[ll]], is.combine=F, is.sep=T),error=function(e) NA))
+  score.sep.dem.bymonth.bt=lapply(1:length(score.sep.dem.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.dem.bt[[ll]], roc.sep.dem.bt[[ll]], is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
+  score.sep.lab.bymonth.bt=lapply(1:length(score.sep.lab.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.lab.bt[[ll]], roc.sep.lab.bt[[ll]], is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
+  score.sep.cls.bymonth.bt=lapply(1:length(score.sep.cls.bt),function(ll) tryCatch(score.summary(dat.label=dat.valid0, nm.event, score.sep.cls.bt[[ll]], roc.sep.cls.bt[[ll]], is.combine=F, is.sep=T),error=function(e) {print(e);return(NA)}))
   
   #auc.cv.cov.se= tryCatch(sd(junk.cv.cov$auc.sep.cov.bt,na.rm=T),error=function(e) NA)
   #auc.cv.dem.se= tryCatch(sd(junk.cv.dem$auc.sep.cov.bt,na.rm=T),error=function(e) NA)

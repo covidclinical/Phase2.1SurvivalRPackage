@@ -87,7 +87,7 @@ cat("4. summary report\n")
 summary.report=summary.report.fun(dat.survival, siteid, dir.output)
 dem.report=dem.report.fun(dat.survival, siteid, dir.output)
   
-KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased),error=function(e) NA)
+KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.survival$dat.analysis.deceased),error=function(e) {print(e);return(NA)})
 
 #### 5. coxnet
 cat("5. coxnet \n")
@@ -175,7 +175,7 @@ id.maxmin=which(toupper(currSiteId)==toupper(ls(beta.maxmin)))
 beta.maxmin.int=beta.maxmin[[id.maxmin]]
 
 survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
-},error=function(e) print(e))
+},error=function(e) {print(e);return(NA)})
 #### 11. obfuscation
 cat("11. obfuscation\n")
 if(obfuscation==T){

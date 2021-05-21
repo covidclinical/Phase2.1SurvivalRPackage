@@ -4,8 +4,9 @@ runAnalysis_VA=function(currSiteId, dir.output){
   sink(file.log, type="message")
   cat("TEMPORAL TREND ANALYSIS\n")
   tryCatch(runAnalysis_TemporalTrend_VA(currSiteId, dir.package, dir.output),error=function(e) print(e))
-  cat("Phase1.1 PAPER REVISION\n")
-  tryCatch(runAnalysis_R1_VA(currSiteId, dir.package, dir.output),error=function(e) print(e))
+  #cat("Phase1.1 PAPER REVISION\n")
+  #tryCatch(runAnalysis_R1_VA(currSiteId, dir.package, dir.output),error=function(e) print(e))
+  cat("DONE")
   sink(type = "message")
   sink()
 }
