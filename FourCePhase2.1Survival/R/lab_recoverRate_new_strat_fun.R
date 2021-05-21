@@ -1,4 +1,4 @@
-lab_recoverRate_new_strat_fun=function(dir.input, strat="max_day", dat.cls, pat.days.cut1=0, pat.days.cut2=14, days.range=c(1:14), code.dict,LocalPatientObservations,LocalPatientClinicalCourse, dat.survival,calendar.date.cut, myscale, is.ns=0){
+lab_recoverRate_new_strat_fun=function(dir.input, strat="max_day", dat.cls, pat.days.cut1=0, pat.days.cut2=14, days.range=c(1:14), code.dict, nm.lab.keep,LocalPatientObservations,LocalPatientClinicalCourse, dat.survival,calendar.date.cut, myscale, is.ns=0){
 dat.calendar=dat.survival$dat.calendar
 dat.x.raw = LocalPatientObservations
 dat.cc=LocalPatientClinicalCourse
@@ -47,12 +47,8 @@ dat.lab.tmp=data_lab_clean2(code.dict, dat.x.raw, nm.value="value", day=myday)
 junk[[myday]]=dat.lab.tmp
 }
 
-nm.lab.all=c("total_bilirubin","creatinine", "Ferritin", "D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin")
-nm.lab.all=setdiff(nm.lab.all,"cardiac_troponin_Normal_Sensitivity")
-nm.lab.all=nm.lab.all[nm.lab.all%in%unique(unlist(lapply(days.range, function(myday) colnames(junk[[myday]]))))]
-
 dat.fit=NULL
-for(nm.lab in nm.lab.all){
+for(nm.lab in nm.lab.keep){
 tmp=NULL
 for(myday in days.range){
   if(nm.lab%in%colnames(junk[[myday]])){
@@ -75,7 +71,8 @@ dat.fit[[nm.lab]]=tmp
 }
 
 res=NULL
-for(nm.lab in nm.lab.all){
+for(nm.lab in nm.lab.keep){
+  tryCatch({
   print(nm.lab)
   dat.lab=dat.fit[[nm.lab]]
   dat.lab=dat.lab[complete.cases(dat.lab),]
@@ -98,6 +95,7 @@ for(nm.lab in nm.lab.all){
 
   s1.early=NA
   s1.late=NA
+  ff=NA
   }else{
     
   tmp.range=unique(dat.lab[dat.lab[,strat]%in%myrange,"day"])
@@ -150,12 +148,14 @@ for(nm.lab in nm.lab.all){
     ss.late=ss.late, 
     mm.late=mm.late, 
     vcov.late=vcov.late,
-    s1.late=s1.late#,
+    s1.late=s1.late,
+    ff=ff
     #randomeffect.early=randomeffect.early, 
     #randomeffect.late=randomeffect.late
     )
  }
   }
+  },error=function(e) NA)
 }
 res$resN=resN
 res

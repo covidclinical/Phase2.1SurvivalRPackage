@@ -10,7 +10,7 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
   }},error=function(e) NA)
   
   nm.check=names(survfit.coxnet$deceased$all$all[["9lab"]])[substr(names(survfit.coxnet$deceased$all$all[["9lab"]]),1,5)=="score"]
-  for(model.setting in c("3lab", "9lab")){
+  for(model.setting in c(ls(survfit.coxnet$deceased$all$all))){
   for(nm in nm.check){
     survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]][survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]]<obfuscation.level]=-99
   }
@@ -120,7 +120,7 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
     }
   }
   
-  #lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
+  lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
   
   return(list(summary.report=summary.report, 
               KM=KM,

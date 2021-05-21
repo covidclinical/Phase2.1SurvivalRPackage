@@ -1,9 +1,12 @@
-CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm.event, K, is.bt, yes.cv=T){
+CV.Survfit.COXNET.sep.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm.event, K, is.bt, yes.cv=T){
   pnum.train=dat.train[,1]
   pnum.valid=dat.valid[,1]
   nn=length(pnum.valid)
   nm.cov=names(betahat)[grepl("ns.calendar",names(betahat))!=1]
-
+  nm.dem=names(betahat)[grepl("age|sex|race",names(betahat))==1]
+  nm.cls=names(betahat)[grepl("charlson",names(betahat))==1]
+  nm.lab=setdiff(nm.cov, c(nm.dem, nm.cls))
+  
   X.train=dat.train[,"days_since_admission"]
   D.train=dat.train[,nm.event]
   Z.train= dat.train[,setdiff(colnames(dat.train), c("patient_num", "days_since_admission", nm.event))]
@@ -18,7 +21,7 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     
   nk=floor(nn/K)
   yyi=array(NA, c(nn, length(t0.all)))
-  yyi.sep.all=yyi.sep.cov=rep(NA,nn)
+  yyi.sep.all=yyi.sep.cov=yyi.sep.dem=yyi.sep.lab=yyi.sep.cls=rep(NA,nn)
   
   for(k in 1:K){
     pnum.v = pnum.valid[1:nk + (k-1)*nk]
@@ -32,45 +35,65 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     yyi[pnum.valid%in%pnum.v,]=junk
     yyi.sep.all[pnum.valid%in%pnum.v]=data.matrix(dat.valid[dat.valid[,1]%in%pnum.v,-c(1:3)])%*%beta.t
     yyi.sep.cov[pnum.valid%in%pnum.v]=data.matrix(dat.valid[dat.valid[,1]%in%pnum.v,nm.cov])%*%beta.t[nm.cov]
-     }
+    yyi.sep.dem[pnum.valid%in%pnum.v]=data.matrix(dat.valid[dat.valid[,1]%in%pnum.v,nm.dem])%*%beta.t[nm.dem]
+    yyi.sep.lab[pnum.valid%in%pnum.v]=data.matrix(dat.valid[dat.valid[,1]%in%pnum.v,nm.lab])%*%beta.t[nm.lab]
+    yyi.sep.cls[pnum.valid%in%pnum.v]=data.matrix(dat.valid[dat.valid[,1]%in%pnum.v,nm.cls])%*%beta.t[nm.cls]
+  }
   }else{
     yyi=do.call(cbind,lapply(t0.all, function(t0) 
       1-FUN.predict.cox(newZ=dat.valid[,-c(1:3)],beta=betahat,X=dat.train[,2],d=dat.train[,3],Z=dat.train[,-c(1:3)],t0=t0)
     ))
     yyi.sep.all=data.matrix(dat.valid[,-c(1:3)])%*%betahat
     yyi.sep.cov=data.matrix(dat.valid[,nm.cov])%*%betahat[nm.cov]
-     }
+    yyi.sep.dem=data.matrix(dat.valid[,nm.dem])%*%betahat[nm.dem]
+    yyi.sep.lab=data.matrix(dat.valid[,nm.lab])%*%betahat[nm.lab]
+    yyi.sep.cls=data.matrix(dat.valid[,nm.cls])%*%betahat[nm.cls]
+    }
   score.cv=data.frame(patient_num=pnum.valid, yyi)
   score.sep.all.cv=data.frame(patient_num=pnum.valid, yyi.sep.all)
   score.sep.cov.cv=data.frame(patient_num=pnum.valid, yyi.sep.cov)
- 
+  score.sep.dem.cv=data.frame(patient_num=pnum.valid, yyi.sep.dem)
+  score.sep.lab.cv=data.frame(patient_num=pnum.valid, yyi.sep.lab)
+  score.sep.cls.cv=data.frame(patient_num=pnum.valid, yyi.sep.cls)
+  
   colnames(score.cv)=c("patient_num", t0.all)
   colnames(score.sep.all.cv)=
     colnames(score.sep.cov.cv)=
+    colnames(score.sep.dem.cv)=
+    colnames(score.sep.lab.cv)=
+    colnames(score.sep.cls.cv)=
     c("patient_num", "score")
+  
   if(is.bt==T){
-    score.sep.cov.bt=tryCatch(lapply(1:100, function(myseed){
+    junk.bt=tryCatch(lapply(1:100, function(myseed){
     set.seed(myseed)
     dat.sample=dat.train[sample(1:dim(dat.train)[1], replace=T),]
     betahat.bt=tryCatch(Est.ALASSO.GLMNET(dat.sample[,-1], fam0="Cox", Wi=NULL, lambda.grid=lambda.grid)$bhat.modBIC,error=function (e) NA)
     if(length(betahat.bt)!=1){
     yyi.sep.cov=data.matrix(dat.sample[,nm.cov])%*%betahat.bt[nm.cov]
-     
+    yyi.sep.dem=data.matrix(dat.sample[,nm.dem])%*%betahat.bt[nm.dem]
+    yyi.sep.lab=data.matrix(dat.sample[,nm.lab])%*%betahat.bt[nm.lab]
+    yyi.sep.cls=data.matrix(dat.sample[,nm.cls])%*%betahat.bt[nm.cls]
+    
     score.sep.cov.bt=data.frame(patient_num=dat.sample$patient_num, score=yyi.sep.cov)
-      }else{
-      score.sep.cov.bt=NA}
-    score.sep.cov.bt
+    score.sep.dem.bt=data.frame(patient_num=dat.sample$patient_num, score=yyi.sep.dem)
+    score.sep.lab.bt=data.frame(patient_num=dat.sample$patient_num, score=yyi.sep.lab)
+    score.sep.cls.bt=data.frame(patient_num=dat.sample$patient_num, score=yyi.sep.cls)
+    }else{
+      score.sep.cov.bt=NA
+      score.sep.dem.bt=NA
+      score.sep.lab.bt=NA
+      score.sep.cls.bt=NA}
+    junk.bt=list(score.sep.cov.bt=score.sep.cov.bt, score.sep.dem.bt=score.sep.dem.bt, score.sep.lab.bt=score.sep.lab.bt, score.sep.cls.bt=score.sep.cls.bt)
+    junk.bt
     }
     ), error=function(e) NA)
     }else{
-      score.sep.cov.bt=NA
+    junk.bt=NA
     }
   return(list(score.cv=score.cv, 
               score.sep.all.cv=score.sep.all.cv, 
               score.sep.cov.cv=score.sep.cov.cv,
-              score.sep.cov.bt=score.sep.cov.bt#,
-              #betahat.bt=betahat.bt,
-              #beta.t=beta.t,
-              #check=colnames(dat.sample)
+              junk.bt=junk.bt
               ))
 }
