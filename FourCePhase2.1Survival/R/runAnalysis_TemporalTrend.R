@@ -178,6 +178,7 @@ survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.9lab, nm.
 },error=function(e) {print(e);return(NA)})
 #### 11. obfuscation
 cat("11. obfuscation\n")
+tryCatch({
 if(obfuscation==T){
 junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
 summary.report=junk$summary.report
@@ -188,6 +189,7 @@ lab.dist.log=junk$lab.dist.log
 lab.summary=junk$lab.summary
 lab.recover=junk$lab.recover
 }
+}, error=function(e) print(e))
 
 save(summary.report,
      dem.report=dem.report,
@@ -197,7 +199,7 @@ save(summary.report,
      lab.recover, 
      lab.summary, 
      cls.summary, cls.obs.summary, cls.early, cls.late,
-     survfit.maxmin.port=survfit.maxmin.port,
+     #survfit.maxmin.port=survfit.maxmin.port,
      file=file.path(dir.output, paste0(currSiteId, "_Result.Rdata")))
 }
 
