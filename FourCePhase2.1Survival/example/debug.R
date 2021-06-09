@@ -4,8 +4,11 @@ library(FourCePhase2.1Survival)
 library(icd)
 runAnalysis()
 
+#setwd("/4ceData/GitHub/Phase2.1SurvivalRpackage/FourCePhase2.1Survival/")
 setwd("FourCePhase2.1Survival/")
+
 currSiteId = FourCePhase2.1Data::getSiteId()
+currSiteId="MGB"
 load("data/betahat.port.deceased.rda")
 load("data/betahat.port.rda")
 load("data/code.dict.rda")
