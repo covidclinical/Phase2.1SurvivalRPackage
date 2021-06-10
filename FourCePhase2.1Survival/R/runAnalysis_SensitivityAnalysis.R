@@ -96,7 +96,7 @@ nm.lab.keep=get(paste0("nm.", model.setting))
 survfit.coxnet.mice[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxnet.new.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
                                           period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10, method.impute="mice", is.ind=F)
 survfit.coxnet.mice.ind[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxnet.new.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-                                                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10, method.impute="MICE", is.ind=T)
+                                                                                                    period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10, method.impute="mice", is.ind=T)
 save(survfit.coxnet.mice, survfit.coxnet.mice.ind, file=file.path(dir.output, paste0(currSiteId, "_SensitivityAnalysis_Result.Rdata")))
 }
 
