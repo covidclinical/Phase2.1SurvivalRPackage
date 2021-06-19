@@ -95,18 +95,18 @@ myscale="original"
 print(model.setting)
 nm.lab.keep=get(paste0("nm.", model.setting))
 for(removeALT in c(1)){
-for(is.stand in c(0)){
-  for(method.impute in c("zero", "mice")){
-    print(method.impute)
-    if(method.impute=="mice"){is.ind.list=c(0,1); mice.time.list=c(5)}else{is.ind.list=1; mice.time.list=NA}
-    for(is.ind in is.ind.list){
-      print(is.ind)
-      for(mice.time in mice.time.list){
-        survfit.coxnet[[method.impute]][[myscale]][[paste0("ind",is.ind)]][[paste0("stand",is.stand)]][[paste0("mice", mice.time)]][[paste0("removeALT", removeALT)]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-                                                                                                                                                       period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10, is.bt=T, method.impute=method.impute, myscale=myscale, is.ind=is.ind, is.stand=is.stand, mice.time=mice.time, removeALT=removeALT)
-      }}
-  }}
-  }
+  for(is.stand in c(0)){
+    for(method.impute in c("zero", "mice")){
+      print(method.impute)
+      if(method.impute=="mice"){is.ind.list=c(0,1); mice.time.list=c(5)}else{is.ind.list=1; mice.time.list=NA}
+      for(is.ind in is.ind.list){
+        print(is.ind)
+        for(mice.time in mice.time.list){
+          survfit.coxnet[[method.impute]][[myscale]][[paste0("ind",is.ind)]][[paste0("stand",is.stand)]][[paste0("mice", mice.time)]][[paste0("removeALT", removeALT)]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
+                                                                                                                                                                                           period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10, is.bt=T, method.impute=method.impute, myscale=myscale, is.ind=is.ind, is.stand=is.stand, mice.time=mice.time, removeALT=removeALT)
+        }}
+    }}
+}
 
 #### 6. lab distribution
 cat("6. lab distribution\n")
@@ -172,11 +172,12 @@ cls.early=hist(junk2$charlson_score[junk2$calendar_date<"2020-07"],plot=F)
 cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 
 cat("10. maxmin\n")
-tryCatch({
+survfit.maxmin.port=NULL
+if(is.maxmin==T){
   id.maxmin=which(toupper(currSiteId)==toupper(ls(beta.maxmin)))
   beta.maxmin.int=beta.maxmin[[id.maxmin]]
   survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.9lab, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
-},error=function(e) {print(e);return(NA)})
+}
 
 #### 11. obfuscation
 cat("11. obfuscation\n")
@@ -190,18 +191,17 @@ if(obfuscation==T){
   lab.summary=junk$lab.summary
   lab.recover=junk$lab.recover
   lab.recover=junk$lab.recover
-  
 }
 
 save(summary.report,
-     dem.report=dem.report,
+     dem.report,
      KM, 
-     survfit.coxnet,#survfit.coxridge,
+     survfit.coxnet,
      lab.dist.original, lab.dist.log,
      lab.recover,lab.recover.rmDead, 
      lab.summary, 
      cls.summary, cls.obs.summary, cls.early, cls.late,
-     #survfit.maxmin.port=survfit.maxmin.port,
-     file=file.path(dir.output, paste0(currSiteId, "_Result_rerun.Rdata")))
+     survfit.maxmin.port=survfit.maxmin.port,
+     file=file.path(dir.output, paste0(currSiteId, "_TemporalTrend.Rdata")))
 }
 
