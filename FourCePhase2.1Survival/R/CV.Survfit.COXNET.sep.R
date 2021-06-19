@@ -49,7 +49,7 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     colnames(score.sep.cov.cv)=
     c("patient_num", "score")
   if(is.bt==T){
-    score.sep.cov.bt=tryCatch(lapply(1:100, function(myseed){
+    junk.bt=tryCatch(lapply(1:100, function(myseed){
     set.seed(myseed)
     dat.sample=dat.train[sample(1:dim(dat.train)[1], replace=T),]
     betahat.bt=tryCatch(Est.ALASSO.GLMNET(dat.sample[,-1], fam0="Cox", Wi=NULL, lambda.grid=lambda.grid)$bhat.modBIC,error=function (e) NA)
@@ -59,16 +59,19 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     score.sep.cov.bt=data.frame(patient_num=dat.sample$patient_num, score=yyi.sep.cov)
       }else{
       score.sep.cov.bt=NA}
-    score.sep.cov.bt
+    junk.bt=list(score.sep.cov.bt=score.sep.cov.bt, betahat.bt=betahat.bt)
+    junk.bt
     }
     ), error=function(e) NA)
     }else{
-      score.sep.cov.bt=NA
+      junk.bt=list(score.sep.cov.bt=NA, betahat.bt=NA)
+      junk.bt
     }
   return(list(score.cv=score.cv, 
               score.sep.all.cv=score.sep.all.cv, 
               score.sep.cov.cv=score.sep.cov.cv,
-              score.sep.cov.bt=score.sep.cov.bt#,
+              junk.bt=junk.bt
+              #junk.bt=junk.bt#,
               #betahat.bt=betahat.bt,
               #beta.t=beta.t,
               #check=colnames(dat.sample)

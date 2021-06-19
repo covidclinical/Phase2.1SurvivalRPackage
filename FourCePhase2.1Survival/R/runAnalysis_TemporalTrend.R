@@ -1,5 +1,5 @@
 
-runAnalysis_TemporalTrend=function(currSiteId){
+runAnalysis_TemporalTrend=function(currSiteId, is.maxmin=F){
 dir.input=FourCePhase2.1Data::getInputDataDirectoryName()
 dir.output=getProjectOutputDirectory()
 obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))
@@ -24,17 +24,17 @@ nm.event="deceased"
 is.rmout=F
 is.onlyCLS=F
 
-nm.lab.all=c("total_bilirubin","creatinine", "Ferritin", "D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin","neutrophil_count")
-nm.3lab=c("D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin")
-nm.9lab=c("alanine_aminotransferase_ALT",     
-                   "albumin",
-                   "aspartate_aminotransferase_AST",
-                   "creatinine",
-                   "C_reactive_protein_CRP_Normal_Sensitivity",
-                   "total_bilirubin",
-                   "white_blood_cell_count_Leukocytes",
-                   "lymphocyte_count",
-                   "neutrophil_count")
+#nm.lab.all=c("total_bilirubin","creatinine", "Ferritin", "D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin","neutrophil_count")
+#nm.3lab=c("D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin")
+#nm.9lab=c("alanine_aminotransferase_ALT",     
+#                   "albumin",
+#                   "aspartate_aminotransferase_AST",
+#                   "creatinine",
+#                   "C_reactive_protein_CRP_Normal_Sensitivity",
+#                   "total_bilirubin",
+#                   "white_blood_cell_count_Leukocytes",
+#                   "lymphocyte_count",
+#                   "neutrophil_count")
 
 nm.10lab=c("alanine_aminotransferase_ALT",     
           "albumin",
@@ -92,19 +92,27 @@ KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.surv
 #### 5. coxnet
 cat("5. coxnet \n")
 
+
 survfit.coxnet=survfit.coxridge=NULL
 period.valid="all"
 nm.event="deceased"
 period.train="all"
-for(model.setting in c("9lab", "10lab")){
+model.setting ="10lab"
+myscale="original"
 print(model.setting)
 nm.lab.keep=get(paste0("nm.", model.setting))
-survfit.coxnet[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-                                          period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
-
-#survfit.coxridge[[nm.event]][[period.train]][[period.valid]][[model.setting]]=survfit.coxridge.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
-#                                                                                       period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10)
-
+for(removeALT in c(1)){
+  for(is.stand in c(0)){
+    for(method.impute in c("zero", "mice")){
+      print(method.impute)
+      if(method.impute=="mice"){is.ind.list=c(0,1); mice.time.list=c(5)}else{is.ind.list=1; mice.time.list=NA}
+      for(is.ind in is.ind.list){
+        print(is.ind)
+        for(mice.time in mice.time.list){
+          survfit.coxnet[[method.impute]][[myscale]][[paste0("ind",is.ind)]][[paste0("stand",is.stand)]][[paste0("mice", mice.time)]][[paste0("removeALT", removeALT)]]=survfit.coxnet.fun(dat.survival, nm.event=nm.event, nm.lab.keep,nm.cls, siteid, dir.output, 
+                                                                                                                                                                                           period.train, period.valid, calendar.date.cut="2020-07",  t0.all=28, yes.cv=T, K=10, is.bt=T, method.impute=method.impute, myscale=myscale, is.ind=is.ind, is.stand=is.stand, mice.time=mice.time, removeALT=removeALT)
+        }}
+    }}
 }
 
 #### 6. lab distribution
@@ -121,18 +129,20 @@ lab.summary=lab_summary_va_fun(dir.input, code.dict, LocalPatientObservations, d
 cat("8. lab recovery rate \n")
 
 myscale="log"
-lab.recover=NULL
+lab.recover=lab.recover.rmDead=NULL
 strat="max_day"
 pat.days.cut1=0
 pat.days.cut2=Inf
 days.range.list=list(c(1:14))
-  for(iii in length(days.range.list)){
-    days.range=days.range.list[[iii]]
-    tmp=lab_recoverRate_new_strat_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, nm.lab.keep=nm.10lab, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
-     lab.recover[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp
-    }
+for(iii in length(days.range.list)){
+  days.range=days.range.list[[iii]]
+  tmp1=lab_recoverRate_new_strat_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, nm.lab.keep=nm.10lab, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
+  tmp2=lab_recoverRate_new_strat_rmDead_fun(dir.input, strat, dat.cls, pat.days.cut1, pat.days.cut2, days.range=days.range, nm.lab.keep=nm.10lab, code.dict, LocalPatientObservations, LocalPatientClinicalCourse, dat.survival,calendar.date.cut="2020-07", myscale, is.ns=1)
+  lab.recover[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp1
+  lab.recover.rmDead[[strat]][[as.character(pat.days.cut1)]][[as.character(pat.days.cut2)]][[paste(min(days.range), max(days.range), sep="-")]]=tmp2
+}
 
-  
+
 #### 9. charlson score
 cat("9. charlson score \n")
 
@@ -168,37 +178,38 @@ colnames(cls.obs.summary)[3]="obs_sum"
 cls.early=hist(junk2$charlson_score[junk2$calendar_date<"2020-07"],plot=F)
 cls.late=hist(junk2$charlson_score[junk2$calendar_date>="2020-07"], plot=F)
 
-#### 10. maxmin
 cat("10. maxmin\n")
-tryCatch({
-id.maxmin=which(toupper(currSiteId)==toupper(ls(beta.maxmin)))
-beta.maxmin.int=beta.maxmin[[id.maxmin]]
+survfit.maxmin.port=NULL
+if(is.maxmin==T){
+  id.maxmin=which(toupper(currSiteId)==toupper(ls(beta.maxmin)))
+  beta.maxmin.int=beta.maxmin[[id.maxmin]]
+  survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.9lab, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
+}
 
-survfit.maxmin.port=survfit.maxmin.port.fun(dat.survival, nm.event, nm.9lab, nm.cls, beta.maxmin.int, dir.output, t0.all, include.ind=F, include.dem=T, include.lab=T, include.cls=T)
-},error=function(e) {print(e);return(NA)})
 #### 11. obfuscation
 cat("11. obfuscation\n")
 if(obfuscation==T){
-junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary,cls.early, cls.late, obfuscation.level)
-summary.report=junk$summary.report
-KM=junk$KM
-survfit.coxnet=junk$survfit.coxnet
-lab.dist.original=junk$lab.dist.original
-lab.dist.log=junk$lab.dist.log
-lab.summary=junk$lab.summary
-lab.recover=junk$lab.recover
+  junk=obfuscation.fun(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, lab.recover.rmDead, cls.obs.summary,cls.early, cls.late, obfuscation.level)
+  summary.report=junk$summary.report
+  KM=junk$KM
+  survfit.coxnet=junk$survfit.coxnet
+  lab.dist.original=junk$lab.dist.original
+  lab.dist.log=junk$lab.dist.log
+  lab.summary=junk$lab.summary
+  lab.recover=junk$lab.recover
+  lab.recover=junk$lab.recover
 }
 
 save(summary.report,
-     dem.report=dem.report,
+     dem.report,
      KM, 
-     survfit.coxnet,#survfit.coxridge,
+     survfit.coxnet,
      lab.dist.original, lab.dist.log,
-     lab.recover, 
+     lab.recover,lab.recover.rmDead, 
      lab.summary, 
      cls.summary, cls.obs.summary, cls.early, cls.late,
      survfit.maxmin.port=survfit.maxmin.port,
-     file=file.path(dir.output, paste0(currSiteId, "_Result.Rdata")))
+     file=file.path(dir.output, paste0(currSiteId, "_TemporalTrend.Rdata")))
 }
 
 

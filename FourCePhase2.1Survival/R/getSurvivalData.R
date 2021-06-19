@@ -16,7 +16,6 @@ getSurvivalData=function (dir.input, code.dict, siteid)
                                            min(dat.calendar$calendar_day))
   dat.calendar$calendar_date <- as.character(dat.calendar$calendar_date)
   
-  
   dat.analysis.severe = data_analysis_clean(dir.input, code.dict, nm.event = "severe", 
                                             dat.surv.raw, dat.x.raw, dat.dem.raw, nm.patient_num, 
                                             nm.days_since_admission, nm.value, patient.keep)

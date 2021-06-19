@@ -1,4 +1,4 @@
-obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, cls.obs.summary, cls.early, cls.late, obfuscation.level){
+obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, lab.dist.log, lab.summary, lab.recover, lab.recover.rmDead,cls.obs.summary, cls.early, cls.late, obfuscation.level){
   obfuscation.level=as.numeric(obfuscation.level)
   summary.report[summary.report<obfuscation.level]=-99
   tryCatch({
@@ -9,12 +9,25 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
     KM[[nm]]=tmp
   }},error=function(e) NA)
   
-  nm.check=names(survfit.coxnet$deceased$all$all[["9lab"]])[substr(names(survfit.coxnet$deceased$all$all[["9lab"]]),1,5)=="score"]
-  for(model.setting in c(ls(survfit.coxnet$deceased$all$all))){
-  for(nm in nm.check){
-    survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]][survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]]<obfuscation.level]=-99
+  for(aa in ls(survfit.coxnet)){
+    for(bb in ls(survfit.coxnet[[aa]])){
+      for(cc in ls(survfit.coxnet[[aa]][[bb]])){
+        for(dd in ls(survfit.coxnet[[aa]][[bb]][[cc]])){
+          for(ee in ls(survfit.coxnet[[aa]][[bb]][[cc]][[dd]])){
+            tmp=survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]]
+            nm.check=names(tmp)[substr(names(tmp),1,5)=="score"]
+            for(nm in nm.check){
+            tmp[[nm]][['28']][tmp[[nm]][['28']]<obfuscation.level]=-99
+            }
+            survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]]=tmp
+        }
+        
+      }
+      
+    }
+    }
   }
-  }
+
   
   for(aa in ls(lab.dist.original$res.all)){
     tmp.aa=lab.dist.original$res.all[[aa]]
@@ -122,6 +135,35 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
   
   lab.recover$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
   
+  
+  
+  for(aa in ls(lab.recover.rmDead)){
+    tmp.aa=lab.recover[[aa]]
+    for(bb in ls(tmp.aa)){
+      tmp.bb=tmp.aa[[bb]]
+      for(cc in 1:length(tmp.bb)){
+        tmp.cc=tmp.bb[[cc]]
+        for(dd in ls(tmp.cc)){
+          tmp.dd=tmp.cc[[dd]]
+          for(ee in ls(tmp.dd)){
+            if(ee!="resN"){
+              tmp.ee=tmp.dd[[ee]]
+              for(ff in ls(tmp.ee))
+                tmp.ff=tmp.ee[[ff]]
+              if(tmp.ff$n.early<=obfuscation.level){tmp.ff$n.early=-99}
+              if(tmp.ff$n.late<=obfuscation.level){tmp.ff$n.late=-99}
+              if(tmp.ff$n.lab.early<=obfuscation.level){tmp.ff$n.lab.early=-99}
+              if(tmp.ff$n.lab.late<=obfuscation.level){tmp.ff$n.lab.late=-99}
+            }
+          }
+          
+        }
+      }
+    }
+  }
+  
+  lab.recover.rmDead$max_day$`0`$'Inf'$`1-14`$resN[lab.recover$max_day$`0`$'Inf'$`1-14`$resN<=obfuscation.level]=-99
+  
   return(list(summary.report=summary.report, 
               KM=KM,
               survfit.coxnet=survfit.coxnet,
@@ -129,6 +171,7 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
               lab.dist.log=lab.dist.log, 
               lab.summary=lab.summary, 
               lab.recover=lab.recover,
+              lab.recover.rmDead=lab.recover.rmDead,
               cls.obs.summary=cls.obs.summary,
               cls.early=cls.early,
               cls.late=cls.late

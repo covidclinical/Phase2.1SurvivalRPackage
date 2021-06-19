@@ -21,7 +21,7 @@ survfit.coxnet.port.fun=function(dat.survival,
   
   multi.formulas = as.formula(paste(
                                     paste0('Surv(days_since_admission,', nm.event,')~'),
-                                    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day),15),collapse=','),'))'),"+",
+                                    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day)-1,15),collapse=','),'))'),"+",
                                     paste(nm.dem.new, collapse="+"),"+",
                                     paste(nm.lab.new,collapse="+"), "+",
                                     paste(paste0("obs_", nm.lab.new),collapse="+"),"+",
@@ -32,14 +32,14 @@ survfit.coxnet.port.fun=function(dat.survival,
   
   multi.formulas.dem = as.formula(paste(
     paste0('Surv(days_since_admission,', nm.event,')~'),
-    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day),15),collapse=','),'))'),"+",
+    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day)-1,15),collapse=','),'))'),"+",
     paste(nm.dem.new, collapse="+")))
 
   dat.valid.dem= data.frame(dat.valid0[,1:3],model.matrix(multi.formulas.dem, data.frame(dat.valid0))[,-1])
   
   multi.formulas.lab = as.formula(paste(
     paste0('Surv(days_since_admission,', nm.event,')~'),
-    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day),15),collapse=','),'))'),"+",
+    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day)-1,15),collapse=','),'))'),"+",
     paste(nm.lab.new,collapse="+"),"+",
     paste(paste0("obs_", nm.lab.new),collapse="+")))
   
@@ -47,7 +47,7 @@ survfit.coxnet.port.fun=function(dat.survival,
   
   multi.formulas.cls = as.formula(paste(
     paste0('Surv(days_since_admission,', nm.event,')~'),
-    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day),15),collapse=','),'))'),"+",
+    paste0('ns(calendar_day, knots=c(',paste(seq(15,max(dat0$calendar_day)-1,15),collapse=','),'))'),"+",
     paste(nm.cls.new,collapse="+")))
   
   dat.valid.cls= data.frame(dat.valid0[,1:3],model.matrix(multi.formulas.cls, data.frame(dat.valid0))[,-1])

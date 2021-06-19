@@ -1,8 +1,13 @@
 data_surv_clean=function (dat.surv.raw, nm.patient_num, nm.days_since_admission, 
-          daymax, nm.event) 
+          dat.censor, daymax, nm.event) 
 {
+  dat.censor.new=dat.censor
+  dat.censor.new$censor_time=pmin(dat.censor.new$last_info, daymax)
+  dat.censor.new=dat.censor.new[,c("patient_num", "censor_time")]
+  dat.surv.raw=left_join(dat.surv.raw, dat.censor.new, by="patient_num")
+  
   dat.sub = dat.surv.raw[dat.surv.raw[, nm.days_since_admission] <= 
-                           daymax, ]
+                           dat.surv.raw[, "censor_time"], ]
   patient_num.list = sort(unique(dat.sub[, nm.patient_num]))
   data.surv.clean.kern = function(dat.sub, patient_num) {
     dat.tmp = dat.sub[dat.sub[, nm.patient_num] == patient_num, 

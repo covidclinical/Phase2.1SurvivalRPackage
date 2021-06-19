@@ -84,7 +84,7 @@ CV.Survfit.COXNET.sep.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all
       score.sep.dem.bt=NA
       score.sep.lab.bt=NA
       score.sep.cls.bt=NA}
-    junk.bt=list(score.sep.cov.bt=score.sep.cov.bt, score.sep.dem.bt=score.sep.dem.bt, score.sep.lab.bt=score.sep.lab.bt, score.sep.cls.bt=score.sep.cls.bt)
+    junk.bt=list(betahat.bt, score.sep.cov.bt=score.sep.cov.bt, score.sep.dem.bt=score.sep.dem.bt, score.sep.lab.bt=score.sep.lab.bt, score.sep.cls.bt=score.sep.cls.bt)
     junk.bt
     }
     ), error=function(e) NA)
