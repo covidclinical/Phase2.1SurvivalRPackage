@@ -5,6 +5,7 @@ devtools::install_github("https://github.com/covidclinical/Phase2.1DataRPackage"
 library(FourCePhase2.1Data)
 library(FourCePhase2.1Survival)
 library(icd)
+library(mice)
 tryCatch(FourCePhase2.1Data::runQC_nodocker(currSiteId, dir.input),error=function(e) print(e))
 sink(file = file.path(dir.output, paste0(currSiteId, "_log.txt")), split = TRUE, append = FALSE)
 cat("TEMPORAL TREND ANALYSIS\n")
