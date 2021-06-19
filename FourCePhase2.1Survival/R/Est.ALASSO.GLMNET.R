@@ -31,7 +31,7 @@ Est.ALASSO.GLMNET=function (data, BIC.factor = 0.1, fam0 = "binomial", w.b = NUL
       gc()
     }
     tmpfit = glmnet(x, y, family = "cox", penalty.factor = w.b, weights=Wi,
-                    alpha = 1, lambda = lambda.grid)
+                    alpha = 1 , lambda = lambda.grid)
     gc()
     N.adj = sum(y[, 2])
   }

@@ -9,12 +9,25 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
     KM[[nm]]=tmp
   }},error=function(e) NA)
   
-  nm.check=names(survfit.coxnet$deceased$all$all[["9lab"]])[substr(names(survfit.coxnet$deceased$all$all[["9lab"]]),1,5)=="score"]
-  for(model.setting in c(ls(survfit.coxnet$deceased$all$all))){
-  for(nm in nm.check){
-    survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]][survfit.coxnet$deceased$all$all[[model.setting]][[nm]][["28"]]<obfuscation.level]=-99
+  for(aa in ls(survfit.coxnet)){
+    for(bb in ls(survfit.coxnet[[aa]])){
+      for(cc in ls(survfit.coxnet[[aa]][[bb]])){
+        for(dd in ls(survfit.coxnet[[aa]][[bb]][[cc]])){
+          for(ee in ls(survfit.coxnet[[aa]][[bb]][[cc]][[dd]])){
+            tmp=survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]]
+            nm.check=names(tmp)[substr(names(tmp),1,5)=="score"]
+            for(nm in nm.check){
+            tmp[[nm]][['28']][tmp[[nm]][['28']]<obfuscation.level]=-99
+            }
+            survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]]=tmp
+        }
+        
+      }
+      
+    }
+    }
   }
-  }
+
   
   for(aa in ls(lab.dist.original$res.all)){
     tmp.aa=lab.dist.original$res.all[[aa]]
