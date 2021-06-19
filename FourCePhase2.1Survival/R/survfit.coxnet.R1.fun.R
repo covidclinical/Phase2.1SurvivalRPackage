@@ -4,7 +4,6 @@ survfit.coxnet.R1.fun=function(dat.survival, nm.event, nm.lab.keep, nm.dem, nm.c
   #cat("1. data preparing \n")
   nm.dem=c("age_group_new", "sex", "race_new")
   nm.dem.new=c("age", "sex", "race")
-  dat00=dat.prep.mice.scale.fun(dat.surv
   dat00=dat.prep.mice.scale.fun(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls, method.impute, myscale, is.ind, mice.time)
   dat0=dat00
   if("ALT"%in%colnames(dat0) & "AST"%in%colnames(dat0)){
