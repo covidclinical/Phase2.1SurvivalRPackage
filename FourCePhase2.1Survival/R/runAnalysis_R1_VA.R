@@ -124,10 +124,10 @@ if(is.transport==T){
 ####### C statistics
 cat("C statistics \n")
 for(nm.event in c("deceased","severedeceased")){
-  survfit.cstat.LabCommon.DemCls.impute[[nm.event]]=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.LabCommon, nm.cls, siteid, dir.output, 
+  survfit.cstat.LabCommon.DemCls.impute[[nm.event]]=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.LabCommon, nm.dem, nm.cls, siteid, dir.output, 
                                                                                   period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, method.impute="zero", myscale="original", is.ind=0, is.stand=0, mice.time="mice", removeALT=1, include.lab=T, include.dem=T, include.cls=T),error=function(e){print(e); NA})
   
-  survfit.cstat.Lit3.DemCls.impute[[nm.event]]=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.Lit3, nm.cls, siteid, dir.output, 
+  survfit.cstat.Lit3.DemCls.impute[[nm.event]]=tryCatch(survfit.cstat.R1.fun(dat.survival, nm.event, nm.lab.Lit3, nm.dem, nm.cls, siteid, dir.output, 
                                                                              period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=T, K=10, is.bt=T, method.impute="zero", myscale="original", is.ind=0, is.stand=0, mice.time="mice", removeALT=1, include.lab=T, include.dem=T, include.cls=T),error=function(e){print(e); NA})
 }
 

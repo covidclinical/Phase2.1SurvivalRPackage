@@ -1,4 +1,4 @@
-survfit.cstat.R1.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, siteid, dir.output, 
+survfit.cstat.R1.fun=function(dat.survival, nm.event, nm.lab.keep, nm.dem, nm.cls, siteid, dir.output, 
                             period.train, period.valid, calendar.date.cut,  t0.all, yes.cv=T, K=10, is.bt=T, method.impute="zero", myscale="original", is.ind=0, is.stand=0, mice.time="mice", removeALT=1, include.lab=T, include.dem=T, include.cls=T){
   
   #cat("1. data preparing \n")

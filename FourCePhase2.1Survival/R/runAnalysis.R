@@ -4,6 +4,7 @@ devtools::install_github("https://github.com/covidclinical/Phase2.1DataRPackage"
 library(FourCePhase2.1Data)
 library(FourCePhase2.1Survival)
 library(icd)
+library(mice)
 currSiteId = getSiteId()
 tryCatch(FourCePhase2.1Data::runQC(currSiteId),error=function(e) print(e))
 sink(file = file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt")), split = TRUE, append = FALSE)
