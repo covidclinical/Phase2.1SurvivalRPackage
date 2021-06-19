@@ -49,7 +49,7 @@ CV.Survfit.COXNET.sep=function(dat.train, dat.valid, betahat, lamhat, t0.all, nm
     colnames(score.sep.cov.cv)=
     c("patient_num", "score")
   if(is.bt==T){
-    junk.bt=tryCatch(lapply(1:2, function(myseed){
+    junk.bt=tryCatch(lapply(1:100, function(myseed){
     set.seed(myseed)
     dat.sample=dat.train[sample(1:dim(dat.train)[1], replace=T),]
     betahat.bt=tryCatch(Est.ALASSO.GLMNET(dat.sample[,-1], fam0="Cox", Wi=NULL, lambda.grid=lambda.grid)$bhat.modBIC,error=function (e) NA)
