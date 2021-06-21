@@ -1,5 +1,5 @@
 
-runAnalysis_R1=function(currSiteId, is.transport=F){
+runAnalysis_R1=function(currSiteId, is.transport=T){
 dir.input=getInputDataDirectoryName()
 dir.output=getProjectOutputDirectory()
 obfuscation.level=getObfuscation(toupper(currSiteId))
@@ -96,16 +96,16 @@ cat("7. transportability \n")
 ###
 survfit.coxnet.port.betahat.deceased=NULL
 if(is.transport==T){
-data(betahat.port.deceased, package="FourCePhase2.1Survival")
-submodel="impute"
-for(mysite in ls(betahat.port.deceased$Lit3.DemCls$impute)){
-  print(mysite)
-  for(mymodel in c("Lit3.DemCls", "LabCommon.DemCls")){
-    betahat=betahat.port.deceased[[mymodel]][[submodel]][[mysite]]
-    survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
-                                                                                                                     period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
+  data(betahat.port.deceased, package="FourCePhase2.1Survival")
+  submodel="impute"
+  for(mysite in ls(betahat.port.deceased$Lit3.DemCls$impute)){
+    print(mysite)
+    for(mymodel in c("LabCommon.DemCls")){
+      betahat=betahat.port.deceased[[mymodel]][[submodel]][[mysite]]
+      survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabCommon, betahat= betahat, nm.cls, siteid, dir.output, 
+                                                                                                                       period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
+    }
   }
-}
 }
 
 ####### C statistics
