@@ -1,5 +1,5 @@
 
-runAnalysis_R1_nodocker=function(currSiteId, dir.input, dir.output, is.transport=F){
+runAnalysis_R1_nodocker=function(currSiteId, dir.input, dir.output, is.transport=T){
 obfuscation.level=getObfuscation(toupper(currSiteId))
 obfuscation=F
 if(length(obfuscation.level)!=0){
@@ -98,9 +98,9 @@ if(is.transport==T){
   submodel="impute"
   for(mysite in ls(betahat.port.deceased$Lit3.DemCls$impute)){
     print(mysite)
-    for(mymodel in c("Lit3.DemCls", "LabCommon.DemCls")){
+    for(mymodel in c("LabCommon.DemCls")){
       betahat=betahat.port.deceased[[mymodel]][[submodel]][[mysite]]
-      survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
+      survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabCommon, betahat= betahat, nm.cls, siteid, dir.output, 
                                                                                                                        period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
     }
   }
