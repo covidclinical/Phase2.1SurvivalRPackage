@@ -8,11 +8,11 @@ getSurvivalData=function (dir.input, code.dict, siteid)
                                           dat.surv.raw$deceased) > 0, 1, 0)
   dat.x.raw = read.csv(paste0(dir.input, "/LocalPatientObservations.csv"))
   dat.dem.raw =
-    readr::read_csv(
+    data.frame(readr::read_csv(
       file.path(dir.input, "LocalPatientSummary.csv"),
       na = c("1900-01-01", "1/1/1900")
-    )
-
+    ))
+  
 
   dat.calendar = dat.surv.raw[dat.surv.raw$days_since_admission == 
                                 0, c("patient_num", "calendar_date")]
