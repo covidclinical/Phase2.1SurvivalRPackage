@@ -11,7 +11,7 @@ data_analysis_clean=function (dir.input, code.dict, nm.event, dat.surv.raw, dat.
   dat.event$x2=as.numeric(as.Date(dat.event$severe_date)-as.Date(dat.event$admission_date))
   dat.event$x3=as.numeric(as.Date(dat.event$death_date)-as.Date(dat.event$admission_date))
   dat.event$x1[which(dat.event$x1<0|is.na(dat.event$x1))]=dat.event$admission_date[which(dat.event$x1<0|is.na(dat.event$x1))]
-  dat.event[which(dat.event<0)]=NA
+  dat.event[dat.event<0]=NA
   dat.event$lastevent_time=pmax(dat.event$x1, dat.event$x2, dat.event$x3, na.rm=T)
   dat.event=dat.event[,c("patient_num", "lastevent_time")]
   dat.censor=data.frame(dat.x.raw[,c("patient_num", "days_since_admission")])
