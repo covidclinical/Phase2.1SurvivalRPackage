@@ -10,6 +10,8 @@ lab_outlier_fun=function(dat.lab){
              "neutrophil_count", 
              "D_dimer")
   
+  nm.10lab=nm.10lab[nm.10lab%in%colnames(dat.lab)]
+  
   out.fun=function(x){
   mm=median(x,na.rm=T)
   UB=mm+10*mad(x, na.rm=T)
