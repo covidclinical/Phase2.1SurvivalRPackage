@@ -14,16 +14,19 @@ obfuscation.fun=function(summary.report, KM, survfit.coxnet,lab.dist.original, l
       for(cc in ls(survfit.coxnet[[aa]][[bb]])){
         for(dd in ls(survfit.coxnet[[aa]][[bb]][[cc]])){
           for(ee in ls(survfit.coxnet[[aa]][[bb]][[cc]][[dd]])){
-            tmp=survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]]
+            for(ff in ls(survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]])){
+              
+            tmp=survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]][[ff]]
             nm.check=names(tmp)[substr(names(tmp),1,5)=="score"]
             for(nm in nm.check){
             tmp[[nm]][['28']][tmp[[nm]][['28']]<obfuscation.level]=-99
             }
-            survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]]=tmp
+            survfit.coxnet[[aa]][[bb]][[cc]][[dd]][[ee]][[ff]]=tmp
         }
         
       }
       
+    }
     }
     }
   }
