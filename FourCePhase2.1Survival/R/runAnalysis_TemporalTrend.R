@@ -50,6 +50,8 @@ nm.10lab=c("alanine_aminotransferase_ALT",
 cat("3. data pivot\n")
 
 dat.survival0=getSurvivalData(dir.input, code.dict, siteid=currSiteId)
+nm.10lab=nm.10lab[nm.10lab%in%colnames(dat.survival0$dat.analysis.severe)]
+
 comorb=map_charlson_codes(LocalPatientObservations)
 index_scores <- comorb[[3]]
 dat.cls0<- data.frame(index_scores %>% dplyr::select(patient_num, charlson_score))
@@ -69,17 +71,11 @@ dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=="2020-10"]="2020-09"
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date>="2020-12"]="2020-11"
 
+### remove patients<18
 patient_num.out=dat.survival$dat.analysis.deceased[which(dat.survival$dat.analysis.deceased$age_group%in%c("00to02", "03to05", "06to11", "12to17")==1), "patient_num"]
 dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)
 dat.cls=dat.cls[dat.cls$patient_num%in%patient_num.out!=1,]
-
-if(is.rmout==T){
-  patient_num.out=lab_outlier_fun(dir.input)
-  dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)}
-
-if(is.onlyCLS==T){
-  patient_num.out=setdiff(dat.survival$dat.calendar$patient_num, dat.cls$patient_num)
-  dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)}
+dat.survival=dem.group.change.fun(dat.survival,nm.var="age_group_new",old.group.nm="00to25",new.group.nm="18to25")
 
 #### 4. summary report
 cat("4. summary report\n")

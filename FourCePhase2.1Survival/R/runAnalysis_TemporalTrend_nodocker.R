@@ -36,6 +36,8 @@ nm.10lab=c("alanine_aminotransferase_ALT",
 cat("3. data pivot\n")
 
 dat.survival0=getSurvivalData(dir.input, code.dict, siteid=currSiteId)
+nm.10lab=nm.10lab[nm.10lab%in%colnames(dat.survival0$dat.analysis.severe)]
+
 comorb=map_charlson_codes(LocalPatientObservations)
 index_scores <- comorb[[3]]
 dat.cls0<- data.frame(index_scores %>% dplyr::select(patient_num, charlson_score))
