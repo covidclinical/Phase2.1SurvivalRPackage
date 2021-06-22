@@ -42,13 +42,22 @@ res.early=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.early[,xx],
 res.late=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.late[,xx],
                                                        breaks=c(lab.breaks$break.lb[lab.breaks$labname==xx]-10, seq(lab.breaks$break.lb[lab.breaks$labname==xx], lab.breaks$break.ub[lab.breaks$labname==xx],(lab.breaks$break.ub[lab.breaks$labname==xx]-lab.breaks$break.lb[lab.breaks$labname==xx])/100),lab.breaks$break.ub[lab.breaks$labname==xx]*100), 
                                                        na.rm=T, plot=F), error=function(e) NA))
-names(res.early)=names(res.late)=nm.lab.all
-res[[myday.list]]=list(res.early=res.early,res.late=res.late)
+res.early=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp.early[,xx],
+                                                        breaks=c(lab.breaks$break.lb[lab.breaks$labname==xx]-10, seq(lab.breaks$break.lb[lab.breaks$labname==xx], lab.breaks$break.ub[lab.breaks$labname==xx],(lab.breaks$break.ub[lab.breaks$labname==xx]-lab.breaks$break.lb[lab.breaks$labname==xx])/100),lab.breaks$break.ub[lab.breaks$labname==xx]*100), 
+                                                        na.rm=T, plot=F),error=function(e) NA))
+res.both=lapply(nm.lab.all, function(xx) tryCatch(hist(tmp[,xx],
+                                                       breaks=c(lab.breaks$break.lb[lab.breaks$labname==xx]-10, seq(lab.breaks$break.lb[lab.breaks$labname==xx], lab.breaks$break.ub[lab.breaks$labname==xx],(lab.breaks$break.ub[lab.breaks$labname==xx]-lab.breaks$break.lb[lab.breaks$labname==xx])/100),lab.breaks$break.ub[lab.breaks$labname==xx]*100), 
+                                                       na.rm=T, plot=F), error=function(e) NA))
+
+names(res.early)=names(res.late)=names(res.both)=nm.lab.all
+res[[myday.list]]=list(res.early=res.early,res.late=res.late, res.both=res.both)
 
 obs.early=lapply(nm.lab.all, function(xx) sum(is.na(tmp.early[,xx])!=1))
 obs.late=lapply(nm.lab.all, function(xx) sum(is.na(tmp.late[,xx])!=1))
-names(obs.early)=names(obs.late)=nm.lab.all
-obs[[myday.list]]=list(obs.early=obs.early,obs.late=obs.late)
+obs.both=lapply(nm.lab.all, function(xx) sum(is.na(tmp[,xx])!=1))
+
+names(obs.early)=names(obs.late)=names(obs.both)=nm.lab.all
+obs[[myday.list]]=list(obs.early=obs.early,obs.late=obs.late, obs.both=obs.both)
 }
 names(res)=names(obs)=c(1:4)
 res.all[[nm.event]]=res

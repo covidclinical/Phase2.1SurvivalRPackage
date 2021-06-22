@@ -34,6 +34,9 @@ dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=="2020-10"]="2020-09"
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date>="2020-12"]="2020-11"
 
+patient_num.out=unique(dat.survival$dat.calendar[dat.survival$dat.calendar$calendar_date>"2020-10","patient_num"])
+dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)
+
 ### remove patients<18
 patient_num.out=dat.survival$dat.analysis.deceased[which(dat.survival$dat.analysis.deceased$age_group%in%c("00to02", "03to05", "06to11", "12to17")==1), "patient_num"]
 dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)

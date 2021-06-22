@@ -141,7 +141,10 @@ tmp.sd=tmp.sd[order(tmp.sd$calendar_date),c("calendar_date", "charlson_score")]
 colnames(tmp.sd)[2]="charlson_score_sd"
 
 cls.summary=data.frame(tmp.mean, charlson_score_sd=tmp.sd[,2])
-
+cls.summary=rbind(cls.summary, data.frame(calendar_date="all", 
+                                          charlson_score_mean=mean(tmp$charlson_score, na.rm=T),
+                                          charlson_score_sd=sd(tmp$charlson_score, na.rm=T)))
+  
 junk2$obs=1-is.na(junk2$charlson_score)
 tmp=setDT(junk2)
 tmp1=data.frame(tmp[,lapply(.SD,mean,na.rm=TRUE),by=calendar_date])
@@ -176,8 +179,7 @@ if(obfuscation==T){
   lab.dist.log=junk$lab.dist.log
   lab.summary=junk$lab.summary
   lab.recover=junk$lab.recover
-  lab.recover=junk$lab.recover
-  
+  lab.recover.rmDead=junk$lab.recover.rmDead
 }
 
 save(summary.report,

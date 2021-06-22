@@ -98,6 +98,7 @@ survfit.coxnet.R1.fun=function(dat.survival, nm.event, nm.lab.keep, nm.dem, nm.c
   N.train=dim(dat.train)[1]
   N.event=sum(dat.train[,nm.event])
   return(list(betahat.cov=betahat.cov, 
+              betahat.cov.bt=betahat.cov.bt, 
               negA.cov=negA.cov,
               dat.sd=dat.sd,
               roc.sep.cov.cv=roc.sep.cov.cv,
