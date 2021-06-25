@@ -1,5 +1,5 @@
 
-runAnalysis_TemporalTrend_VA=function(currSiteId,dir.output){
+runAnalysis_TemporalTrend_VA=function(currSiteId,dir.output, is.maxmin=F){
 load("data/code.dict.rda")
 load("data/betahat.port.rda")
 load("data/lab.breaks.log.rda")
@@ -50,6 +50,7 @@ cat("3. data pivot\n")
 
 dir.phase1.input=paste0("P:\\ORD_Cho_201803054D\\Hong, Chuan\\4CE_data_03032021\\", siteid, "\\")
 dat.survival0=getSurvivalData_va(dir.phase1.input, LocalPatientClinicalCourse, LocalPatientObservations, LocalPatientSummary, code.dict, siteid=siteid)
+nm.10lab=nm.10lab[nm.10lab%in%colnames(dat.survival0$dat.analysis.severe)]
 
 comorb=map_charlson_codes(LocalPatientObservations)
 index_scores <- comorb[[3]]
@@ -84,7 +85,6 @@ KM <- tryCatch(survfit(Surv(days_since_admission, deceased) ~ 1, data = dat.surv
 
 #### 5. coxnet
 cat("5. coxnet \n")
-
 
 survfit.coxnet=survfit.coxridge=NULL
 period.valid="all"
@@ -204,4 +204,5 @@ save(summary.report,
      survfit.maxmin.port=survfit.maxmin.port,
      file=file.path(dir.output, paste0(currSiteId, "_TemporalTrend.Rdata")))
 }
+
 

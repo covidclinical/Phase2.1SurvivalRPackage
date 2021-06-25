@@ -1,6 +1,11 @@
 
-runAnalysis_R1_VA=function(currSiteId,dir.output){
+runAnalysis_R1_VA=function(currSiteId,dir.output, is.transport=T){
 load("data/code.dict.rda")
+load("data/betahat.port.deceased.rda")
+load("data/lab.breaks.log.rda")
+load("data/lab.breaks.original.rda")
+load("data/beta.maxmin.rda")
+
 siteid=currSiteId
 obfuscation.level=10
 obfuscation=F
@@ -46,6 +51,9 @@ dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=="2020-08"]="2020-07"
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date=="2020-10"]="2020-09"
 dat.survival$dat.calendar$calendar_date[dat.survival$dat.calendar$calendar_date>="2020-12"]="2020-11"
+
+patient_num.out=unique(dat.survival$dat.calendar[dat.survival$dat.calendar$calendar_date>"2020-10","patient_num"])
+dat.survival=rmOutlierSurvivalData(dat.survival,patient_num.out)
 
 ### remove patients<18
 patient_num.out=dat.survival$dat.analysis.deceased[which(dat.survival$dat.analysis.deceased$age_group%in%c("00to02", "03to05", "06to11", "12to17")==1), "patient_num"]
@@ -109,13 +117,13 @@ cat("7. transportability \n")
 ###
 survfit.coxnet.port.betahat.deceased=NULL
 if(is.transport==T){
-  data(betahat.port.deceased, package="FourCePhase2.1Survival")
+  #data(betahat.port.deceased, package="FourCePhase2.1Survival")
   submodel="impute"
   for(mysite in ls(betahat.port.deceased$Lit3.DemCls$impute)){
     print(mysite)
-    for(mymodel in c("Lit3.DemCls", "LabCommon.DemCls")){
+    for(mymodel in c("LabCommon.DemCls")){
       betahat=betahat.port.deceased[[mymodel]][[submodel]][[mysite]]
-      survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabAll, betahat= betahat, nm.cls, siteid, dir.output, 
+      survfit.coxnet.port.betahat.deceased[[mymodel]][[submodel]][[mysite]]=tryCatch(survfit.glmnet.coefficient.R1.fun(dat.survival, ipw=T, nm.event="deceased", nm.lab.all=nm.lab.LabCommon, betahat= betahat, nm.cls, siteid, dir.output, 
                                                                                                                        period.train, period.valid, calendar.date.cut="2020-07",  t0.all=c(1:14), yes.cv=F, is.bt=T),error=function(e){print(e); NA})
     }
   }
