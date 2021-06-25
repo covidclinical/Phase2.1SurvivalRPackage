@@ -45,6 +45,9 @@ survfit.glmnet.coefficient.R1.fun=function(dat.survival, ipw=T, nm.event, nm.lab
   multi.formulas = as.formula(paste('Y~',
                                     paste(nm.keep.new, collapse="+")))
   
+  dat.train0=dat.train0[complete.cases(dat.train0),]
+  dat.valid0=dat.valid0[complete.cases(dat.valid0),]
+  
   dat.train= data.frame(dat.train0[,1:3],model.matrix(multi.formulas, data.frame(Y=0,dat.train0))[,-1])
   dat.valid= data.frame(dat.valid0[,1:3],model.matrix(multi.formulas, data.frame(Y=0,dat.valid0))[,-1])
   
