@@ -1,0 +1,3 @@
+load("/Users/chuanhong/Documents/GitHub/Phase2.1SurvivalRPackage/FourCePhase2.1Survival/data/betahat.port.deceased.rda")
+ls()
+betahat.port.deceased
