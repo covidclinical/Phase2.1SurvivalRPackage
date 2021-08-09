@@ -10,8 +10,17 @@ tryCatch(FourCePhase2.1Data::runQC(currSiteId),error=function(e) print(e))
 sink(file = file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt")), split = TRUE, append = FALSE)
 #cat("TEMPORAL TREND ANALYSIS\n")
 #tryCatch(runAnalysis_TemporalTrend(currSiteId),error=function(e) print(e))
-cat("Phase1.1 PAPER REVISION\n")
-tryCatch(runAnalysis_R1(currSiteId),error=function(e) print(e))
+#cat("Phase1.1 PAPER REVISION\n")
+#tryCatch(runAnalysis_R1(currSiteId),error=function(e) print(e))
+cat("maxmin \n")
+tryCatch(runAnalysis_maxmin(currSiteId),error=function(e) print(e))
+
+cat("aki \n")
+tryCatch(runAnalysis_aki(currSiteId),error=function(e) print(e))
+
+cat("distributed cox \n")
+tryCatch(runAnalysis_dc(currSiteId),error=function(e) print(e))
+
 cat("DONE")
 sink(file=NULL)
 }

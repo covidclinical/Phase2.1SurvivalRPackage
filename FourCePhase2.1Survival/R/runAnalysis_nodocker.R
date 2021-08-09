@@ -21,7 +21,7 @@ tryCatch(runAnalysis_aki_nodocker(currSiteId, dir.input, dir.output),error=funct
 cat("distributed cox \n")
 tryCatch(runAnalysis_dc_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
 
-#cat("DONE")
+cat("DONE")
 sink(file=NULL)
 }
 
