@@ -76,6 +76,7 @@ runAnalysis_maxmin_nodocker=function(currSiteId, dir.input, dir.output){
   names(betahat)=rownames(betahat.tmp)
   }else{
   betahat=betahat.tmp
+  betahat[is.na(betahat)]=0
   }
   survfit.port[[nm.beta]]=survfit.port.new.fun(dat.survival, nm.event, nm.lab.keep=nm.10lab, nm.cls, betahat=betahat, dir.output, t0.all, period.train="all", period.valid="all", method.impute="zero", myscale="original", is.ind=0, is.stand=0, mice.time=5, removeALT=1, is.calendar=1)
   }else{
