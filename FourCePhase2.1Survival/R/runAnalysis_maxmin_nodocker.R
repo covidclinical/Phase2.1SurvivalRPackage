@@ -73,6 +73,7 @@ runAnalysis_maxmin_nodocker=function(currSiteId, dir.input, dir.output){
   if(nm.beta=="beta.maximin"){
   id.site=which(toupper(currSiteId)==toupper(colnames(betahat.tmp)))
   betahat=betahat.tmp[,id.site]
+  betahat[is.na(betahat)]=0
   names(betahat)=rownames(betahat.tmp)
   }else{
   betahat=betahat.tmp
@@ -82,6 +83,7 @@ runAnalysis_maxmin_nodocker=function(currSiteId, dir.input, dir.output){
   }else{
   for(mysiteid in colnames(betahat.tmp)){
     betahat=betahat.tmp[,mysiteid]
+    betahat[is.na(betahat)]=0
     names(betahat)=rownames(betahat.tmp)  
     survfit.port[[nm.beta]][[mysiteid]]=survfit.port.new.fun(dat.survival, nm.event, nm.lab.keep=nm.10lab, nm.cls, betahat=betahat, dir.output, t0.all, period.train="all", period.valid="all", method.impute="zero", myscale="original", is.ind=0, is.stand=0, mice.time=5, removeALT=1, is.calendar=1)
   }
