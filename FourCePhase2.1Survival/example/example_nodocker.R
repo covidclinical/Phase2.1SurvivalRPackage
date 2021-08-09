@@ -4,4 +4,5 @@ devtools::install_github("https://github.com/covidclinical/Phase2.1SurvivalRPack
 currSiteId = "MGB" ## change to your siteid
 dir.input="/Users/chuanhong/Documents/Input"
 dir.output="/Users/chuanhong/Documents/Output"
+library(FourCePhase2.1Survival)
 FourCePhase2.1Survival::runAnalysis_nodocker(currSiteId, dir.input, dir.output)

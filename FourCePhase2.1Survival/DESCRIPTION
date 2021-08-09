@@ -8,7 +8,7 @@ Authors@R:
            email = "chuan_hong@hms.harvard.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-Imports: rtf,utils,survival,stringr,data.table, splines,dplyr, tidyr, tidyverse, icd, glmnet, glmpath, lars, zoo, MASS, lme4, SurrogateTest, survAUC, mice
+Imports: rtf,utils,survival,stringr,data.table, splines,dplyr, tidyr, tidyverse, icd, glmnet, glmpath, lars, zoo, MASS, lme4, SurrogateTest, survAUC, mice, statmod
 License: What license it uses
 Encoding: UTF-8
 LazyData: true

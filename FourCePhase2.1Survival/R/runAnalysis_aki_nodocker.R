@@ -1,12 +1,7 @@
 
-runAnalysis_aki_nodocker=function(siteid, dir.input, dir.output){
-currSiteid=siteid
-devtools::install_github("https://github.com/covidclinical/Phase2.1DataRPackage", subdir="FourCePhase2.1Data", upgrade=FALSE)
-library(FourCePhase2.1Data)
-library(FourCePhase2.1Survival)
-library(icd)
-library(mice)
-obfuscation.level=getObfuscation(toupper(currSiteId))
+runAnalysis_aki_nodocker=function(currSiteId, dir.input, dir.output){
+
+obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))
 obfuscation=F
 if(length(obfuscation.level)!=0){
   if(obfuscation.level!=0){obfuscation=T}}
@@ -38,7 +33,9 @@ obs=LocalPatientObservations[LocalPatientObservations$patient_num%in%demog$patie
 tmp=get_aki_events(demog,obs)
 res[[res.nm[ll]]]=tmp
 }
-save(res, file=file.path(dir.output, paste0(currSiteId, "_aki.Rdata")))
+res.aki=res
+save(res.aki=res.aki,
+     file=file.path(dir.output, paste0(currSiteId, "_aki.Rdata")))
 }
 
 
