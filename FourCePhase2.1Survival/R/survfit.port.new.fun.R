@@ -71,12 +71,12 @@ survfit.port.new.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, betah
   
   #dat.train= data.frame(dat.train0[,1:3],model.matrix(multi.formulas, data.frame(dat.train0))[,-1])
   #dat.valid= data.frame(dat.valid0[,1:3],model.matrix(multi.formulas, data.frame(dat.valid0))[,-1])
-  dat.train=dat.train[,c(colnames(dat.train)[1:3],intersect(colnames(dat.train), names(beta.maxmin.int)))]
-  dat.valid=dat.valid[,c(colnames(dat.valid)[1:3],intersect(colnames(dat.valid), names(beta.maxmin.int)))]
+  dat.train=dat.train[,c(colnames(dat.train)[1:3],intersect(colnames(dat.train), names(betahat)))]
+  dat.valid=dat.valid[,c(colnames(dat.valid)[1:3],intersect(colnames(dat.valid), names(betahat)))]
   
   cat("3. validation \n")
   ##if there is no overlap between dat.train and dat.valid, then choose yes.cv=F
-  junk.cv.cov= CV.Survfit.COXNET.sep(dat.valid, dat.valid, beta.maxmin.int, lamhat=NULL, t0.all=c(1:14), nm.event, K=NULL, is.bt=F, yes.cv=F)
+  junk.cv.cov= CV.Survfit.COXNET.sep(dat.valid, dat.valid, betahat, lamhat=NULL, t0.all=c(1:14), nm.event, K=NULL, is.bt=F, yes.cv=F)
   score.cv=junk.cv.cov$score.sep.cov.cv
  
   cat("4. accuracy parameters by days since admission\n")
