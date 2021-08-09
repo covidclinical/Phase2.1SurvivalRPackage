@@ -1,5 +1,5 @@
 
-runAnalysis_aki_nodocker=function(currSiteId){
+runAnalysis_aki=function(currSiteId){
 dir.input=FourCePhase2.1Data::getInputDataDirectoryName()
 dir.output=getProjectOutputDirectory()
 obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))

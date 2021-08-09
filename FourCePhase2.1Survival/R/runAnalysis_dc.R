@@ -1,5 +1,7 @@
 
-runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
+runAnalysis_dc=function(currSiteId){
+  dir.input=FourCePhase2.1Data::getInputDataDirectoryName()
+  dir.output=getProjectOutputDirectory()
   obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))
   obfuscation=F
   if(length(obfuscation.level)!=0){
