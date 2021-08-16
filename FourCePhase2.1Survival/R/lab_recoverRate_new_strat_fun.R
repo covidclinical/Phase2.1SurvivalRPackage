@@ -6,6 +6,8 @@ dat.cc=dat.cc[dat.cc$in_hospital==1,]
 dat.cc.stay=dat.cc[,c("patient_num", "days_since_admission")]
 dat.cc.stay=data.frame(data.table(dat.cc.stay)[,max(days_since_admission), by="patient_num"])
 colnames(dat.cc.stay)[2]="max_day"
+summary.stay=hist(dat.cc.stay$max_day,plot=F)
+
 dat.x.raw=left_join(dat.x.raw,dat.cc.stay, by="patient_num")
 dat.x.raw=dat.x.raw[-which(dat.x.raw$days_since_admission>dat.x.raw$max_day),]
 if(pat.days.cut2!=Inf){
@@ -44,6 +46,8 @@ for(ii in names(day.range.list)){
 junk=NULL
 for(myday in days.range){
 dat.lab.tmp=data_lab_clean2(code.dict, dat.x.raw, nm.value="value", day=myday)
+dat.lab.tmp$AA=dat.lab.tmp$aspartate_aminotransferase_AST/dat.lab.tmp$alanine_aminotransferase_ALT
+
 junk[[myday]]=dat.lab.tmp
 }
 
@@ -158,5 +162,7 @@ for(nm.lab in nm.lab.keep){
   },error=function(e) NA)
 }
 res$resN=resN
+res$summary.stay=summary.stay
+
 res
 }

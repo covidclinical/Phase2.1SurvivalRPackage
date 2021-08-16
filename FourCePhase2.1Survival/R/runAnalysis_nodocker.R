@@ -15,11 +15,14 @@ sink(file = file.path(dir.output, paste0(currSiteId, "_log.txt")), split = TRUE,
 cat("maxmin \n")
 tryCatch(runAnalysis_maxmin_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
 
-cat("aki \n")
-tryCatch(runAnalysis_aki_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
+#cat("aki \n")
+#tryCatch(runAnalysis_aki_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
 
 cat("distributed cox \n")
 tryCatch(runAnalysis_dc_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
+
+cat("additional \n")
+tryCatch(runAnalysis_TemporalTrend_additional_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
 
 cat("DONE")
 sink(file=NULL)

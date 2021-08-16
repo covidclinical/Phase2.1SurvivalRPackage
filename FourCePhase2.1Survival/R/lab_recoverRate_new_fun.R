@@ -23,11 +23,12 @@ junk=NULL
 for(myday in days.range){
 dat.lab.tmp=data_lab_clean2(code.dict, dat.x.raw, 
                             nm.value="value", day=myday) 
+dat.lab.tmp$AA=dat.lab.tmp$aspartate_aminotransferase_AST/dat.lab.tmp$alanine_aminotransferase_ALT
 junk[[myday]]=dat.lab.tmp
 }
 
 #nm.lab.all=colnames(junk[[1]])[-1]
-nm.lab.all=c("total_bilirubin","creatinine", "Ferritin", "D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin","neutrophil_count")
+nm.lab.all=c("total_bilirubin","creatinine", "Ferritin", "D_dimer", "C_reactive_protein_CRP_Normal_Sensitivity", "albumin","neutrophil_count", "AA")
 nm.lab.all=setdiff(nm.lab.all,"cardiac_troponin_Normal_Sensitivity")
 nm.lab.all=nm.lab.all[nm.lab.all%in%unique(unlist(lapply(days.range, function(myday) colnames(junk[[myday]]))))]
 

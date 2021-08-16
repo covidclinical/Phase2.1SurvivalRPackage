@@ -25,10 +25,11 @@ tmp=data_lab_clean2(code.dict, dat.x.raw[dat.x.raw$patient_num%in%patient_num.se
 if(nm.event=="deceased"){
 tmp=data_lab_clean2(code.dict, dat.x.raw[dat.x.raw$patient_num%in%patient_num.deceased,], nm.value="value", day=myday) 
 }
-  
+tmp$AA=tmp$aspartate_aminotransferase_AST/tmp$alanine_aminotransferase_ALT
 tmp=left_join(tmp, dat.calendar,by="patient_num")
 nm.lab.all=setdiff(colnames(tmp), c("patient_num", "calendar_date", "calendar_day"))
 lab.breaks=lab.breaks.original
+lab.breaks=rbind(lab.breaks, data.frame(labname="AA", break.lb=0, break.ub=max(tmp$AA,na.rm=T)))
 if(myscale=="log"){
 tmp[,nm.lab.all]=log(tmp[,nm.lab.all])
 lab.breaks=lab.breaks.log

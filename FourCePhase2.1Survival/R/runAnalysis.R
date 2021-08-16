@@ -15,11 +15,14 @@ sink(file = file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt"
 cat("maxmin \n")
 tryCatch(runAnalysis_maxmin(currSiteId),error=function(e) print(e))
 
-cat("aki \n")
-tryCatch(runAnalysis_aki(currSiteId),error=function(e) print(e))
+#cat("aki \n")
+#tryCatch(runAnalysis_aki(currSiteId),error=function(e) print(e))
 
 cat("distributed cox \n")
 tryCatch(runAnalysis_dc(currSiteId),error=function(e) print(e))
+
+cat("additional \n")
+tryCatch(runAnalysis_TemporalTrend_additional(currSiteId),error=function(e) print(e))
 
 cat("DONE")
 sink(file=NULL)
