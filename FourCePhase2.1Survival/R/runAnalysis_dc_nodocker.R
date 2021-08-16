@@ -14,18 +14,37 @@ runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
   data(lab.breaks.log, package="FourCePhase2.1Survival")
   data(lab.breaks.original, package="FourCePhase2.1Survival")
   data(betamaxmin, package="FourCePhase2.1Survival")
+  data(autoimmune.icd, package="FourCePhase2.1Survival")
+  
   
   dat=getDCData(dir.input, code.dict, currSiteId, LocalPatientClinicalCourse, LocalPatientObservations, LocalPatientSummary)
-  nm.lab.keep=c("ALT","albumin", "AST", "creatinine", "CRP",  "TB",  "WBC", "LYM", "neutrophil_count", "charlson_score" )#"DD" ,
+  nm.lab.keep=c("ALT","albumin", "AST", "AA","creatinine", "CRP",  "TB",  "WBC", "LYM", "neutrophil_count", "DD","charlson_score" )#"DD" ,
   nm.med.keep=c("MED.COAGB", "MED.DIURETIC","MED.REMDESIVIR","MED.ACEI", "MED.ARB" , "MED.COAGA", "MED.SIANES", "MED.SICARDIAC")
   
   nm.lab.keep=nm.lab.keep[nm.lab.keep%in%colnames(dat)]
   nm.med.keep=nm.med.keep[nm.med.keep%in%colnames(dat)]
   
+  model.list=c("all-wo-autoimmune", "all-w-autoimmune", "autoimmune")
+  res.DC=vector(mode="list",length=length(model.list))
+  for(mymodel in model.list){
+  print(mymodel)
+  tryCatch({
+  if(mymodel=="all-wo-autoimmune"){
   junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(colnames(dat)[6:8],nm.lab.keep,nm.med.keep), collapse="+") )
   multi.formulas = as.formula(junk)
   data= data.frame(dat[,1:5],model.matrix(multi.formulas, data.frame(dat))[,-1])
-
+  }else{
+  if(mymodel=="all-w-autoimmune"){  
+  junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(colnames(dat)[6:8],nm.lab.keep,nm.med.keep, "ind_autoimmune"), collapse="+") )
+  multi.formulas = as.formula(junk)
+  data= data.frame(dat[,1:5],model.matrix(multi.formulas, data.frame(dat))[,-1])
+  }else{
+  junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(colnames(dat)[6:8],nm.lab.keep,nm.med.keep), collapse="+") )
+  multi.formulas = as.formula(junk)
+  data= data.frame(dat[dat$ind_autoimmune==1,1:5],model.matrix(multi.formulas, data.frame(dat[dat$ind_autoimmune==1,]))[,-1])  
+  }
+  }
+  
   # further clean
   data$age00to25=(data$age00to25+data$age26to49)
   data$age26to49=NULL
@@ -47,7 +66,7 @@ runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
   # save(covariates,file="covariates.rda")
   # load("covariates.rda")
   # ind=match(nm.lab.keep,colnames(data[,12:ncol(data)]) )
-  data=data.frame(data[,1:11], data[,c(nm.lab.keep,nm.med.keep)])
+  #data=data.frame(data[,1:11], data[,c(nm.lab.keep,nm.med.keep)])
   
   
   # analysis
@@ -70,8 +89,13 @@ runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
   x=data.train[,6:ncol(data.train)]
   sum_stat$xmean=apply(x,2,mean)
   sum_stat$xcov=cov(x)
+  res.DC[[mymodel]]=sum_stat
+  },error=function(e) print(e))
+  }
   
-  save(res.DC=sum_stat,
+  
+  save(res.DC=res.DC,
+       res.outcome.dist=res.outcome.dist,
        file=file.path(dir.output, paste0(currSiteId, "_DC.Rdata")))
   
 }

@@ -92,6 +92,21 @@ getDCData=function (dir.input, code.dict, siteid,
   dat.med=data.frame(dat.sub.wide)
   
   
+  # collect autoimmune data
+  dat.sub = dat.x.raw[dat.x.raw[, "concept_type"] %in% c("DIAG-ICD9", "DIAG-ICD10"), ]
+  dat.sub$concept = paste(dat.sub$concept_type, dat.sub$concept_code, sep = ":")
+  concept.keep=c(paste0("DIAG-ICD10:", autoimmune.icd[autoimmune.icd$icd_version==10,"code"]),
+                 paste0("DIAG-ICD9:", autoimmune.icd[autoimmune.icd$icd_version==9,"code"]))
+  dat.sub=dat.sub[dat.sub$concept%in%concept.keep,]
+  dat.sub = dat.sub[, c(nm.patient_num, "concept","value")]
+  dat.sub.wide <- dat.sub %>%pivot_wider(values_from = value, names_from = concept)
+  for (i in 2:ncol(dat.sub.wide)){
+    dat.sub.wide[[i]]=sapply(1:nrow(dat.sub.wide), function(kk){ length((dat.sub.wide[[i]])[[kk]]) } )
+  }
+  dat.icd=data.frame(dat.sub.wide)
+  dat.icd$ind_autoimmune=rowSums(dat.icd[,-1])
+  dat.icd$ind_autoimmune=ifelse(dat.icd$ind_autoimmune>0,1,0)
+  dat.icd=dat.icd[,c("patient_num", "ind_autoimmune")]
   # collect demographic data
   # dat.dem = data_dem_clean(dat.dem.raw, nm.patient_num, nm.gender = "sex", nm.age = "age_group", nm.race = "race")
   dat.sub = data.frame(dat.dem.raw[, c(nm.patient_num, nm.gender, nm.age, nm.race)])
@@ -102,6 +117,8 @@ getDCData=function (dir.input, code.dict, siteid,
   dat.analysis = left_join(dat.surv, dat.dem, by = nm.patient_num)
   dat.analysis = left_join(dat.analysis, dat.lab, by = nm.patient_num)
   dat.analysis = left_join(dat.analysis, dat.med, by = nm.patient_num)
+  dat.analysis = left_join(dat.analysis, dat.icd, by = nm.patient_num)
+  dat.analysis$ind_autoimmune[is.na(dat.analysis$ind_autoimmune)]=0
   
   dat.analysis$sex[dat.analysis$sex=="other"]="female"
   dat.analysis$age_group_new = dat.analysis$age_group
@@ -184,15 +201,19 @@ getDCData=function (dir.input, code.dict, siteid,
   dat.calendar=dat.survival[["dat.calendar"]]
   dat=left_join(dat.calendar[,c("patient_num", "calendar_time", "calendar_date")], dat, by="patient_num")
   
-  dat=dat[,c("patient_num", "days_since_admission", nm.event, "calendar_date","calendar_time", nm.dem.new, nm.lab.keep, nm.cls,nm.med.keep)]
+  dat=dat[,c("patient_num", "days_since_admission", nm.event, "calendar_date","calendar_time", nm.dem.new, nm.lab.keep, nm.cls,nm.med.keep, "ind_autoimmune")]
   dat$age_group_new = relevel(dat$age_group_new, ref = "50to69")
   dat$sex=factor(dat$sex, level=c("male", "female"))
   dat$race_new=factor(dat$race_new, level=c("white","black","asian","hispanic and other"))
   
-  dat.lab.impute=do.call(cbind,lapply(c(nm.lab.keep,nm.med.keep), function(ll){x=dat[,ll];mm=mean(x,na.rm=T);x[is.na(x)]=mm; x}))
-  # obs.indx=1*do.call(cbind,lapply(nm.lab.keep, function(ll){x=dat[,ll];is.na(x)!=1}))
-  # colnames(obs.indx)=paste0("obs_", nm.lab.keep)
-  dat[,c(nm.lab.keep,nm.med.keep)]=dat.lab.impute
+  # multiple imputation
+  nm.impute.new=colnames(dat)[colnames(dat)%in%c(nm.lab.keep, nm.med.keep)]
+  mice.time=5
+  mice_imputes0 = mice(dat[,-c(1:5)], m=mice.time, maxit = 40, seed=1234, print=FALSE)
+  mice_imputes=lapply(1:mice.time, function(ll) complete(mice_imputes0, ll))
+  mice_imputes=Reduce("+", mice_imputes)/length(mice_imputes)
+  dat.impute= mice_imputes[,nm.impute.new]
+  dat[,nm.impute.new]=dat.impute
   
   dat.cls.impute=dat[,nm.cls]
   dat.cls.impute[is.na(dat.cls.impute)]=mean(dat.cls.impute, na.rm=T)
@@ -217,10 +238,17 @@ getDCData=function (dir.input, code.dict, siteid,
   colnames(dat)=gsub("_CLASS", "", colnames(dat))
   colnames(dat)=gsub(".CLASS", "", colnames(dat))
   
-  nm.lab.new=setdiff(colnames(dat),c("patient_num", "days_since_admission", "severedeceased", "deceased","calendar_date","calendar_time",        
-                                     "age","sex","race"))
-  nm.lab.new=setdiff(nm.lab.new, c(nm.lab.new[grepl("obs_",nm.lab.new)],"charlson_score"))
-  dat[,colnames(dat)%in%nm.lab.new]=log(dat[,colnames(dat)%in%nm.lab.new]+1)
+  if("ALT"%in%colnames(dat) & "AST"%in%colnames(dat)){
+    X.ALT=dat$ALT
+    X.AST=dat$AST
+    dat=data.frame(dat, AA=X.AST/X.ALT)  
+  }
+  dat=dat[,grepl("ALT", colnames(dat))!=1]
+
+  nm.lab.trans=c("CRP", "AST", "ALT", "DD")
+  nm.med.trans=colnames(dat)[grepl("MED",colnames(dat))]
+  
+  dat[,colnames(dat)%in%c(nm.lab.trans, nm.med.trans)]=log(dat[,colnames(dat)%in%c(nm.lab.trans, nm.med.trans)]+0.5)
   dat0=dat
   # dat0=dat0[,grepl("obs_", colnames(dat0))!=1]
   
