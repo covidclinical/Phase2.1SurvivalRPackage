@@ -21,7 +21,7 @@ tryCatch(runAnalysis_maxmin_nodocker(currSiteId, dir.input, dir.output),error=fu
 cat("distributed cox \n")
 tryCatch(runAnalysis_dc_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
 
-cat("distributed cox \n")
+cat("additional \n")
 tryCatch(runAnalysis_TemporalTrend_additional_nodocker(currSiteId, dir.input, dir.output),error=function(e) print(e))
 
 cat("DONE")
