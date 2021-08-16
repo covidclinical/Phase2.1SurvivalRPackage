@@ -22,7 +22,7 @@ cat("distributed cox \n")
 tryCatch(runAnalysis_dc(currSiteId),error=function(e) print(e))
 
 cat("additional \n")
-tryCatch(runAnalysis_TemporalTrend_additional(currSiteId, dir.input, dir.output),error=function(e) print(e))
+tryCatch(runAnalysis_TemporalTrend_additional(currSiteId),error=function(e) print(e))
 
 cat("DONE")
 sink(file=NULL)
