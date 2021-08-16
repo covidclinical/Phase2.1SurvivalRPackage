@@ -1,5 +1,5 @@
 
-runAnalysis_TemporalTrend=function(currSiteId, is.maxmin=F){
+runAnalysis_TemporalTrend_additional=function(currSiteId, is.maxmin=F){
   dir.input=FourCePhase2.1Data::getInputDataDirectoryName()
   dir.output=getProjectOutputDirectory()
   obfuscation.level=FourCePhase2.1Data::getObfuscation(toupper(currSiteId))
@@ -111,8 +111,9 @@ save(summary.report,
      lab.dist.original, lab.dist.log,
      lab.recover,lab.recover.rmDead, 
      res.outcome.dist,
+     res.outcome.dist.early,
+     res.outcome.dist.late,
      file=file.path(dir.output, paste0(currSiteId, "_TemporalTrend_additional.Rdata")))
-
 }
 
 

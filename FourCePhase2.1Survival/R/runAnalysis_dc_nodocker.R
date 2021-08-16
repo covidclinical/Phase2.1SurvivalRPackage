@@ -93,11 +93,8 @@ runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
   },error=function(e) print(e))
   }
   
-  
   save(res.DC=res.DC,
-       res.outcome.dist=res.outcome.dist,
        file=file.path(dir.output, paste0(currSiteId, "_DC.Rdata")))
-  
 }
 
 

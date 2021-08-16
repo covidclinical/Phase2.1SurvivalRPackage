@@ -109,8 +109,9 @@ save(summary.report,
      lab.dist.original, lab.dist.log,
      lab.recover,lab.recover.rmDead, 
      res.outcome.dist,
+     res.outcome.dist.early,
+     res.outcome.dist.late,
      file=file.path(dir.output, paste0(currSiteId, "_TemporalTrend_additional.Rdata")))
-
 }
 
 
