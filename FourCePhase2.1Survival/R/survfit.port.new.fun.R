@@ -75,6 +75,7 @@ survfit.port.new.fun=function(dat.survival, nm.event, nm.lab.keep, nm.cls, betah
   dat.valid=dat.valid[,c(colnames(dat.valid)[1:3],intersect(colnames(dat.valid), names(betahat)))]
   
   cat("3. validation \n")
+  betahat=betahat[names(betahat)%in%colnames(dat.valid)]
   ##if there is no overlap between dat.train and dat.valid, then choose yes.cv=F
   junk.cv.cov= CV.Survfit.COXNET.sep(dat.valid, dat.valid, betahat, lamhat=NULL, t0.all=c(1:14), nm.event, K=NULL, is.bt=F, yes.cv=F)
   score.cv=junk.cv.cov$score.sep.cov.cv

@@ -12,17 +12,22 @@ sink(file = file.path(getProjectOutputDirectory(), paste0(currSiteId, "_log.txt"
 #tryCatch(runAnalysis_TemporalTrend(currSiteId),error=function(e) print(e))
 #cat("Phase1.1 PAPER REVISION\n")
 #tryCatch(runAnalysis_R1(currSiteId),error=function(e) print(e))
+if(siteid%in%c("NUH", "nuh")){
+tryCatch(runAnalysis_R1(currSiteId),error=function(e) print(e))
+}
+if(siteid%in%c("NUH", "nuh")!=1){
 cat("maxmin \n")
 tryCatch(runAnalysis_maxmin(currSiteId),error=function(e) print(e))
+}
 
 #cat("aki \n")
 #tryCatch(runAnalysis_aki(currSiteId),error=function(e) print(e))
 
-cat("distributed cox \n")
-tryCatch(runAnalysis_dc(currSiteId),error=function(e) print(e))
+#cat("distributed cox \n")
+#tryCatch(runAnalysis_dc(currSiteId),error=function(e) print(e))
 
-cat("additional \n")
-tryCatch(runAnalysis_TemporalTrend_additional(currSiteId),error=function(e) print(e))
+#cat("additional \n")
+#tryCatch(runAnalysis_TemporalTrend_additional(currSiteId),error=function(e) print(e))
 
 cat("DONE")
 sink(file=NULL)
