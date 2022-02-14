@@ -19,22 +19,22 @@ runAnalysis_dc=function(currSiteId){
   
   dat=getDCData(dir.input, code.dict, currSiteId, LocalPatientClinicalCourse, LocalPatientObservations, LocalPatientSummary)
   nm.lab.keep=c("ALT","albumin", "AST", "AA","creatinine", "CRP",  "TB",  "WBC", "LYM", "neutrophil_count", "DD","charlson_score" )#"DD" ,
-  nm.med.keep=c("MED.COAGB", "MED.DIURETIC","MED.REMDESIVIR","MED.ACEI", "MED.ARB" , "MED.COAGA", "MED.SIANES", "MED.SICARDIAC")
+  nm.med.keep=c("MED.COAGB", "MED.DIURETIC","MED.REMDESIVIR","MED.ACEI", "MED.ARB" , "MED.COAGA")
   
   nm.lab.keep=nm.lab.keep[nm.lab.keep%in%colnames(dat)]
   nm.med.keep=nm.med.keep[nm.med.keep%in%colnames(dat)]
   
-  model.list=c("all-wo-autoimmune", "all-w-autoimmune", "autoimmune")
+  model.list=c("all", "all-w-ind-autoimmune", "autoimmune-only")
   res.DC=vector(mode="list",length=length(model.list))
   for(mymodel in model.list){
     print(mymodel)
     tryCatch({
-      if(mymodel=="all-wo-autoimmune"){
+      if(mymodel=="all"){
         junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(colnames(dat)[6:8],nm.lab.keep,nm.med.keep), collapse="+") )
         multi.formulas = as.formula(junk)
         data= data.frame(dat[,1:5],model.matrix(multi.formulas, data.frame(dat))[,-1])
       }else{
-        if(mymodel=="all-w-autoimmune"){  
+        if(mymodel=="all-w-ind-autoimmune"){  
           junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(colnames(dat)[6:8],nm.lab.keep,nm.med.keep, "ind_autoimmune"), collapse="+") )
           multi.formulas = as.formula(junk)
           data= data.frame(dat[,1:5],model.matrix(multi.formulas, data.frame(dat))[,-1])

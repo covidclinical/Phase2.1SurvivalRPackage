@@ -1,3 +1,9 @@
+hermitt <- function(x, df = 3){
+  hermitt_mat <- cbind(x, x^2 - 1, x^3 - 3 * x, 
+                       x^4 - 6 * x^2 + 3, x^5 - 10 * x^3 + 15 * x)
+  return(hermitt_mat[,1:df])
+}
+
 simul <- function(N, X, betas, lambda, rho, beta, rateC,dist_family='weibull'){
   ### get Weibull/Gompertz distribution with cumulative baseline hazard: H(t)=lambda*t^rho/H(t)=lambda/rho*(exp(rho*t)-1)
   ### rho changes across strata, for simplicity only assume 2 strata here
@@ -407,7 +413,8 @@ surv_local = function(time,event,x,calendar_time, num_bh_knot=2, d_phi=3,
   ###        d_phi: in tin, number of degrees of freedom of cubic spline for calendar time, we can use default value, 3
   ### output: a list containing estimations for all parameters and summary statistics, including gradient and Hessian
   # add cubic baseline for calendar time
-  phi = data.frame(ns(calendar_time,df=d_phi))
+  # phi = data.frame(ns(calendar_time,df=d_phi))
+  phi = data.frame(hermitt(calendar_time,df=d_phi))
   colnames(phi) = paste0('phi',1:ncol(phi))
   
   "

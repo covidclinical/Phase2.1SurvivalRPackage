@@ -1,4 +1,4 @@
-getDCData=function (dir.input, code.dict, siteid, 
+getDCData=function (code.dict, 
                     LocalPatientClinicalCourse, 
                     LocalPatientObservations,
                     LocalPatientSummary) 
@@ -81,32 +81,18 @@ getDCData=function (dir.input, code.dict, siteid,
   rownames(dat.sub.wide) = NULL
   dat.lab=data.frame(dat.sub.wide[, which(is.na(colnames(dat.sub.wide)) != 1)])
   
-  # collect med data
-  dat.sub = dat.x.raw[dat.x.raw[, "concept_type"] %in% c("MED-CLASS"), ]
-  dat.sub$concept = paste(dat.sub$concept_type, dat.sub$concept_code, sep = ":")
-  dat.sub = dat.sub[, c(nm.patient_num, "concept","value")]
-  dat.sub.wide <- dat.sub %>%pivot_wider(values_from = value, names_from = concept)
-  for (i in 2:ncol(dat.sub.wide)){
-    dat.sub.wide[[i]]=sapply(1:nrow(dat.sub.wide), function(kk){ length((dat.sub.wide[[i]])[[kk]]) } )
-  }
-  dat.med=data.frame(dat.sub.wide)
+  # # # collect med data
+  # dat.sub = dat.x.raw[dat.x.raw[, "concept_type"] %in% c("MED-CLASS"), ]
+  # dat.sub$concept = paste(dat.sub$concept_type, dat.sub$concept_code, sep = ":")
+  # dat.sub = dat.sub[, c(nm.patient_num, "concept","value")]
+  # dat.sub.wide <- dat.sub %>%pivot_wider(values_from = value, names_from = concept)
+  # for (i in 2:ncol(dat.sub.wide)){
+  #   dat.sub.wide[[i]]=sapply(1:nrow(dat.sub.wide), function(kk){ length((dat.sub.wide[[i]])[[kk]]) } )
+  # }
+  # dat.med=data.frame(dat.sub.wide)
+
   
-  
-  # collect autoimmune data
-  dat.sub = dat.x.raw[dat.x.raw[, "concept_type"] %in% c("DIAG-ICD9", "DIAG-ICD10"), ]
-  dat.sub$concept = paste(dat.sub$concept_type, dat.sub$concept_code, sep = ":")
-  concept.keep=c(paste0("DIAG-ICD10:", autoimmune.icd[autoimmune.icd$icd_version==10,"code"]),
-                 paste0("DIAG-ICD9:", autoimmune.icd[autoimmune.icd$icd_version==9,"code"]))
-  dat.sub=dat.sub[dat.sub$concept%in%concept.keep,]
-  dat.sub = dat.sub[, c(nm.patient_num, "concept","value")]
-  dat.sub.wide <- dat.sub %>%pivot_wider(values_from = value, names_from = concept)
-  for (i in 2:ncol(dat.sub.wide)){
-    dat.sub.wide[[i]]=sapply(1:nrow(dat.sub.wide), function(kk){ length((dat.sub.wide[[i]])[[kk]]) } )
-  }
-  dat.icd=data.frame(dat.sub.wide)
-  dat.icd$ind_autoimmune=rowSums(dat.icd[,-1])
-  dat.icd$ind_autoimmune=ifelse(dat.icd$ind_autoimmune>0,1,0)
-  dat.icd=dat.icd[,c("patient_num", "ind_autoimmune")]
+ 
   # collect demographic data
   # dat.dem = data_dem_clean(dat.dem.raw, nm.patient_num, nm.gender = "sex", nm.age = "age_group", nm.race = "race")
   dat.sub = data.frame(dat.dem.raw[, c(nm.patient_num, nm.gender, nm.age, nm.race)])
@@ -117,18 +103,21 @@ getDCData=function (dir.input, code.dict, siteid,
   dat.analysis = left_join(dat.surv, dat.dem, by = nm.patient_num)
   dat.analysis = left_join(dat.analysis, dat.lab, by = nm.patient_num)
   dat.analysis = left_join(dat.analysis, dat.med, by = nm.patient_num)
-  dat.analysis = left_join(dat.analysis, dat.icd, by = nm.patient_num)
-  dat.analysis$ind_autoimmune[is.na(dat.analysis$ind_autoimmune)]=0
-  
+
   dat.analysis$sex[dat.analysis$sex=="other"]="female"
   dat.analysis$age_group_new = dat.analysis$age_group
   dat.analysis$age_group_new[dat.analysis$age_group %in% c("00to02", "03to05", "06to11", "12to17", "18to25")] = "00to25"
   dat.analysis$age_group_new[dat.analysis$age_group %in% "other"]="50to69" ## combine other with 50to69
   dat.analysis$age_group_new <- factor(dat.analysis$age_group_new, levels = c("00to25", "26to49", "50to69", "70to79", "80plus"))
-  
+  is_race = TRUE
+  if(is.null(dat.analysis$race)){
+    dat.analysis$race = "unknown"
+    is_race = FALSE
+  }
   dat.analysis$race_new = dat.analysis$race
-  dat.analysis$race_new[dat.analysis$race %in% c("american_indian", "hawaiian_pacific_islander", "hispanic_latino", "other")] = "hispanic and other"
-  dat.analysis$race_new <- factor(dat.analysis$race_new, levels = c("white",  "black", "asian", "hispanic and other"))
+  # dat.analysis$race_new[dat.analysis$race %in% c("american_indian", "hawaiian_pacific_islander", "hispanic_latino", "asian", "other")] = "other"
+  dat.analysis$race_new[!dat.analysis$race_new %in% c("white","black")] = "other"
+  dat.analysis$race_new <- factor(dat.analysis$race_new, levels = c("white",  "black", "other"))
   
   dat.analysis = dat.analysis[dat.analysis$patient_num %in%  patient.keep, ]
   dat.analysis.deceased=dat.analysis
@@ -183,29 +172,17 @@ getDCData=function (dir.input, code.dict, siteid,
   ind=which(apply(dat.med>0,2, mean)>0.1)
   nm.med.keep=(colnames(dat.med)[ind])[-1]
   
-  # period.train="all"
-  # period.valid="all"
-  # calendar.date.cut="2020-07"
-  # t0.all=c(1:14)
-  # include.ind=F   
-  # include.dem=T
-  # include.cls=T
-  # include.lab=T
-  
-  # source('P:/ORD_Cho_201803054D/Wang, Xuan/dataclean/rubish/dat.prep.fun.R', echo=TRUE)
-  # if(include.ind==T){dat0=dat.prep.fun(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls)}
-  # if(include.ind==F){dat0=dat.prep.fun(dat.survival, nm.event, nm.dem, nm.lab.keep, nm.cls); dat0=dat0[,grepl("obs_", colnames(dat0))!=1]}
-  
   dat=dat.survival[[paste0("dat.analysis.",nm.event)]]
   dat=dat[,duplicated(colnames(dat))!=1]
   dat.calendar=dat.survival[["dat.calendar"]]
   dat=left_join(dat.calendar[,c("patient_num", "calendar_time", "calendar_date")], dat, by="patient_num")
   
-  dat=dat[,c("patient_num", "days_since_admission", nm.event, "calendar_date","calendar_time", nm.dem.new, nm.lab.keep, nm.cls,nm.med.keep, "ind_autoimmune")]
+  dat=dat[,c("patient_num", "days_since_admission", nm.event, "calendar_date","calendar_time", nm.dem.new, nm.lab.keep, nm.cls,nm.med.keep)]
   dat$age_group_new = relevel(dat$age_group_new, ref = "50to69")
   dat$sex=factor(dat$sex, level=c("male", "female"))
-  dat$race_new=factor(dat$race_new, level=c("white","black","asian","hispanic and other"))
+  dat$race_new=factor(dat$race_new, level=c("white","black","other"))
   
+  dat_nonimpute = dat
   # multiple imputation
   nm.impute.new=colnames(dat)[colnames(dat)%in%c(nm.lab.keep, nm.med.keep)]
   mice.time=5
@@ -214,44 +191,60 @@ getDCData=function (dir.input, code.dict, siteid,
   mice_imputes=Reduce("+", mice_imputes)/length(mice_imputes)
   dat.impute= mice_imputes[,nm.impute.new]
   dat[,nm.impute.new]=dat.impute
-  
+
   dat.cls.impute=dat[,nm.cls]
   dat.cls.impute[is.na(dat.cls.impute)]=mean(dat.cls.impute, na.rm=T)
   # cls.indx=1*(is.na(dat[,nm.cls])!=1)
   dat[,nm.cls]=dat.cls.impute
   
-  # dat=cbind(dat, obs.indx, obs_charlson_score=cls.indx)
-  
-  colnames(dat)=gsub("C_reactive_protein_CRP_Normal_Sensitivity", "CRP", colnames(dat))
-  colnames(dat)=gsub("lymphocyte_count", "LYM", colnames(dat))
-  colnames(dat)=gsub("D_dimer", "DD", colnames(dat))
-  colnames(dat)=gsub("alanine_aminotransferase_ALT", "ALT", colnames(dat))
-  colnames(dat)=gsub("aspartate_aminotransferase_AST", "AST", colnames(dat))
-  colnames(dat)=gsub("total_bilirubin", "TB", colnames(dat))
-  colnames(dat)=gsub("lactate_dehydrogenase_LDH", "LDH", colnames(dat))
-  colnames(dat)=gsub("prothrombin_time_PT", "PT", colnames(dat))
-  colnames(dat)=gsub("white_blood_cell_count_Leukocytes", "WBC", colnames(dat))
-  colnames(dat)=gsub("age_group_new", "age", colnames(dat))
-  colnames(dat)=gsub("race_new", "race", colnames(dat))
-  colnames(dat)=gsub("cardiac_troponin_High_Sensitivity", "cardiac_high", colnames(dat))
-  colnames(dat)=gsub("cardiac_troponin_Normal_Sensitivity", "cardiac_morm", colnames(dat))
-  colnames(dat)=gsub("_CLASS", "", colnames(dat))
-  colnames(dat)=gsub(".CLASS", "", colnames(dat))
-  
-  if("ALT"%in%colnames(dat) & "AST"%in%colnames(dat)){
-    X.ALT=dat$ALT
-    X.AST=dat$AST
-    dat=data.frame(dat, AA=X.AST/X.ALT)  
-  }
-  dat=dat[,grepl("ALT", colnames(dat))!=1]
-
-  nm.lab.trans=c("CRP", "AST", "ALT", "DD")
-  nm.med.trans=colnames(dat)[grepl("MED",colnames(dat))]
-  
-  dat[,colnames(dat)%in%c(nm.lab.trans, nm.med.trans)]=log(dat[,colnames(dat)%in%c(nm.lab.trans, nm.med.trans)]+0.5)
-  dat0=dat
-  # dat0=dat0[,grepl("obs_", colnames(dat0))!=1]
-  
-  dat0=dat0[dat0$days_since_admission!=0,]
-  dat0
+  dat = change_nm(dat)
+  dat_nonimpute = change_nm(dat_nonimpute)
+  return(list(`impute` = dat, `non_impute` = dat_nonimpute))
 }
+
+
+
+
+splitdata_race <- function(mymodel, dat, nm.lab.keep, nm.med.keep){
+  if(mymodel=="all-wo-race"){
+    dat.var.nm = colnames(dat)[6:8]
+    dat.var.nm = dat.var.nm[dat.var.nm!="race"]
+    junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(dat.var.nm,nm.lab.keep,nm.med.keep), collapse="+") )
+    multi.formulas = as.formula(junk)
+    sub_dat = dat
+    data= data.frame(dat[,1:5], 
+                     model.matrix.lm(multi.formulas, sub_dat, na.action=na.pass)[,-1])
+  }else{
+    if(mymodel=="all-w-race"){  
+      dat.var.nm = colnames(dat)[6:8]
+      junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(dat.var.nm,nm.lab.keep,nm.med.keep), collapse="+") )
+      multi.formulas = as.formula(junk)
+      sub_dat = dat
+      data= data.frame(dat[,1:5],
+                       model.matrix.lm(multi.formulas, sub_dat, na.action=na.pass)[,-1])
+    }else{
+      if(mymodel=="nonwhite"){
+        dat.var.nm = colnames(dat)[6:8]
+        dat.var.nm = dat.var.nm[dat.var.nm!="race"]
+        junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(dat.var.nm,nm.lab.keep,nm.med.keep), collapse="+") )
+        multi.formulas = as.formula(junk)
+        sub_dat = dat[dat$race!="white", ]
+        data= data.frame(sub_dat[,1:5],
+                         model.matrix.lm(multi.formulas, sub_dat, na.action=na.pass)[,-1])   
+      }else{
+        dat.var.nm = colnames(dat)[6:8]
+        dat.var.nm = dat.var.nm[dat.var.nm!="race"]
+        junk=paste0(paste0('Surv(days_since_admission,','deceased',')~'),paste0(c(dat.var.nm,nm.lab.keep,nm.med.keep), collapse="+") )
+        multi.formulas = as.formula(junk)
+        sub_dat = dat[dat$race==mymodel, ]
+        data= data.frame(sub_dat[,1:5],
+                         model.matrix.lm(multi.formulas, sub_dat, na.action=na.pass)[,-1])   
+      }
+    }
+  }
+  return(data)
+}
+
+
+
+
