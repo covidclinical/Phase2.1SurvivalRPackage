@@ -82,14 +82,14 @@ getDCData=function (code.dict,
   dat.lab=data.frame(dat.sub.wide[, which(is.na(colnames(dat.sub.wide)) != 1)])
   
   # # # collect med data
-  # dat.sub = dat.x.raw[dat.x.raw[, "concept_type"] %in% c("MED-CLASS"), ]
-  # dat.sub$concept = paste(dat.sub$concept_type, dat.sub$concept_code, sep = ":")
-  # dat.sub = dat.sub[, c(nm.patient_num, "concept","value")]
-  # dat.sub.wide <- dat.sub %>%pivot_wider(values_from = value, names_from = concept)
-  # for (i in 2:ncol(dat.sub.wide)){
-  #   dat.sub.wide[[i]]=sapply(1:nrow(dat.sub.wide), function(kk){ length((dat.sub.wide[[i]])[[kk]]) } )
-  # }
-  # dat.med=data.frame(dat.sub.wide)
+  dat.sub = dat.x.raw[dat.x.raw[, "concept_type"] %in% c("MED-CLASS"), ]
+  dat.sub$concept = paste(dat.sub$concept_type, dat.sub$concept_code, sep = ":")
+  dat.sub = dat.sub[, c(nm.patient_num, "concept","value")]
+  dat.sub.wide <- dat.sub %>%pivot_wider(values_from = value, names_from = concept)
+  for (i in 2:ncol(dat.sub.wide)){
+    dat.sub.wide[[i]]=sapply(1:nrow(dat.sub.wide), function(kk){ length((dat.sub.wide[[i]])[[kk]]) } )
+  }
+  dat.med=data.frame(dat.sub.wide)
 
   
  
