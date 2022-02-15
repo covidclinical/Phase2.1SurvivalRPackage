@@ -89,7 +89,7 @@ runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
   }
   save(res.DC=res.DC,
        race_table = table(dat$race),
-       is_race = is_race,
+       #is_race = is_race,
        file=file.path(dir.output, paste0(currSiteId, "_DC.Rdata")))
 }
 
