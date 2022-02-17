@@ -10,12 +10,7 @@ runAnalysis_dc_nodocker=function(currSiteId, dir.input, dir.output){
   LocalPatientClinicalCourse=FourCePhase2.1Data::getLocalPatientClinicalCourse_nodocker(currSiteId, dir.input)
   LocalPatientSummary=FourCePhase2.1Data::getLocalPatientSummary_nodocker(currSiteId, dir.input)
   data(code.dict, package="FourCePhase2.1Data")
-  data(betahat.port, package="FourCePhase2.1Survival")
-  data(lab.breaks.log, package="FourCePhase2.1Survival")
-  data(lab.breaks.original, package="FourCePhase2.1Survival")
-  data(betamaxmin, package="FourCePhase2.1Survival")
-  data(autoimmune.icd, package="FourCePhase2.1Survival")
-  
+
   
   dc_dat=getDCData(code.dict, LocalPatientClinicalCourse, LocalPatientObservations, LocalPatientSummary)
   dat = dc_dat$impute
